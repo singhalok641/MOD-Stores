@@ -23,11 +23,9 @@ import {
   Badge, 
   Picker, 
   Form, 
+  Button,
+  Icon,
   Item as FormItem } from 'native-base';
-
-import { WebBrowser } from 'expo';
-
-import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -59,6 +57,20 @@ export default class HomeScreen extends React.Component {
     return (
       <Container style={styles.container}>
         <Content>
+          <View style={{flexDirection:'row',justifyContent: 'space-around',}}>
+            <Left>
+              <Button light block style={styles.refreshButtonStyle}>
+                <Text> All Orders </Text>
+              </Button>
+            </Left>
+            <Right>
+              <Button iconLeft block light style={styles.refreshButtonStyle}>
+                <Icon name='refresh' />
+                <Text> Refresh </Text>
+              </Button>
+            </Right>
+
+          </View>
           <List dataArray={orders}
             renderRow={(order) =>
               <ListItem>
@@ -99,6 +111,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 15,
     backgroundColor: '#fff',
+    paddingLeft:10,
   },
   boldcolortext:{
     fontWeight:'bold',
@@ -129,5 +142,14 @@ const styles = StyleSheet.create({
   },
   boldtext:{
     fontWeight:'bold',
-  }
+  },
+  refreshButtonStyle:{
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius:10,
+  },
+  refreshIconStyle: {
+    fontSize: 20,
+    height: 22,
+    color: 'black',
+  },
 });
