@@ -4,11 +4,10 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
   ActivityIndicator,
-  AsyncStorage
+  AsyncStorage,
 } from 'react-native';
 import { 
   Container, 
@@ -17,6 +16,7 @@ import {
   List, 
   ListItem, 
   Thumbnail, 
+  Text,
   Body, 
   Left, 
   Right, 
@@ -25,7 +25,9 @@ import {
   Form, 
   Button,
   Icon,
-  Item as FormItem } from 'native-base';
+  Item as FormItem, } from 'native-base';
+
+  const Item = Picker.Item;
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -37,7 +39,14 @@ export default class HomeScreen extends React.Component {
     this.state = {
       isLoading: true,
       orders:{},
+      selected1: "key0",
     }
+  }
+
+  onValueChange(value: string) {
+    this.setState({
+      selected1: value
+    });
   }
 
   render() {
@@ -51,16 +60,33 @@ export default class HomeScreen extends React.Component {
     }*/
 
     const { navigate } = this.props.navigation;
-    var orders =   [{"id":"UB00201BC22","amount":"50","status":"Delivered","date":"21 Sep 2017","time":"14:24"},
-                    {"id":"UB00201BC30","amount":"100","status":"Cancelled","date":"21 Sep 2017","time":"14:24"},
-                    {"id":"UB00201BC36","amount":"320","status":"Delivered","date":"21 Sep 2017","time":"14:24"}];
+    var orders =   [{"id":"#11085","amount":"50","status":"Waiting","time":"31 Jan 1:24 pm"},
+                    {"id":"#11084","amount":"50","status":"Confirmed","time":"31 Jan 1:24 pm"},
+                    {"id":"#11083","amount":"320","status":"Dispatched","time":"31 Jan 1:24 pm"},
+                    {"id":"#11082","amount":"320","status":"Dispatched","time":"31 Jan 1:24 pm"}];
+
+    var past_orders =[{"id":"#11081","amount":"50","status":"Delivered","time":"31 Jan 1:24 pm"},
+                    {"id":"#11080","amount":"100","status":"Cancelled","time":"31 Jan 1:24 pm"},
+                    {"id":"#11079","amount":"320","status":"Delivered","time":"31 Jan 1:24 pm"}];
+    
     return (
       <Container style={styles.container}>
         <Content>
-          <View style={{flexDirection:'row',justifyContent: 'space-around',}}>
+          <View style={{flexDirection:'row',justifyContent: 'space-between',paddingBottom:20}}>
             <Left>
               <Button light block style={styles.refreshButtonStyle}>
-                <Text> All Orders </Text>
+                <View style={{ flex:2,flexDirection: 'row' ,alignItems: 'center', justifyContent:'flex-end'}}>
+                  <Picker
+                    style={ styles.pickerStyle }
+                    iosHeader="Select one"
+                    mode="dropdown"
+                    selectedValue={this.state.selected1}
+                    onValueChange={this.onValueChange.bind(this)}>
+                    <Item label="All Orders" value="key0" />
+                    <Item label="Last Week Orders" value="key1" />
+                    <Item label="Last Month Orders" value="key2" />
+                  </Picker>
+                </View>
               </Button>
             </Left>
             <Right>
@@ -69,32 +95,59 @@ export default class HomeScreen extends React.Component {
                 <Text> Refresh </Text>
               </Button>
             </Right>
-
           </View>
+
+          <Text style={ styles.boldtext }>Active Orders({orders.length})</Text>
           <List dataArray={orders}
             renderRow={(order) =>
-              <ListItem>
+            <ListItem>
               <View style={styles.view}>
-                  <View style={styles.innerviewleft}>
-                    <Text style={styles.boldtext}>{order.id}</Text>
-                    <Text>{order.time}</Text>
+                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                    <Text>{order.id}</Text>
+                    <Text>₹{order.amount}</Text>
                   </View>
 
-                  <View style={styles.innerviewright}>
-                    <Text style={styles.boldtext}>₹{order.amount}</Text>
+                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
                     {
-                          order.status == 'Delivered' ? (
-                            <Badge style={{ backgroundColor: '#388e3c',width:80,justifyContent: 'center'}}>
-                              <Text style={{ color: 'white',textAlign: 'center'}}>{order.status}</Text>
-                            </Badge>
-                          )
-                          :
-                          (
-                            <Badge style={{ backgroundColor: '#f39c12',width:80,justifyContent: 'center'}}>
-                              <Text style={{ color: 'white',textAlign: 'center'}}>{order.status}</Text>
-                            </Badge>
-                          )
+                      order.status == 'Waiting' ?
+                      (<Text style={{ color: '#2f95dc',textAlign: 'center' }}>{order.status}</Text>)
+                      :
+                      (
+                      order.status == 'Confirmed' ?
+                        (
+                          <Text style={{ color: '#ff1919',textAlign: 'center' }}>{order.status}</Text>
+                        )
+                        :
+                        (
+                          <Text style={{ color: '#E69500',textAlign: 'center' }}>{order.status}</Text>
+                        )
+                      )
                     }
+                    <Text note>{order.time}</Text>    
+                  </View>
+                </View>
+              </ListItem>
+            }>
+          </List>
+
+          <Text style={{ fontWeight:'bold', paddingTop:20 }}>Past Orders({past_orders.length})</Text>
+           <List dataArray={past_orders}
+            renderRow={(order) =>
+            <ListItem>
+              <View style={styles.view}>
+                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                    <Text>{order.id}</Text>
+                    <Text>₹{order.amount}</Text>
+                  </View>
+
+                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                    {
+                      order.status == 'Delivered' ?
+                      (<Text style={{ color: '#2f95dc',textAlign: 'center' }}>{order.status}</Text>)
+                      :
+                      (<Text style={{ color: '#ff1919',textAlign: 'center' }}>{order.status}</Text>)
+                    }
+                    <Text note>{order.time}</Text>    
                   </View>
                 </View>
               </ListItem>
@@ -125,20 +178,28 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#2980b9'
   },
+   pickerStyle: {
+    width:160, 
+    height:20, 
+    justifyContent:'flex-end', 
+    alignItems:'center', 
+    color:'#000',
+  },
   view: {
     flex:1,
-    flexDirection:'row',
+    flexDirection:'column',
     justifyContent: 'space-between',
     alignItems: 'stretch' 
   },
   innerviewleft: {
     flexDirection:'column',
-    justifyContent: 'space-around',
+    justifyContent: 'flex-start',
+    alignItems:'flex-start'
   },
   innerviewright: {
     flexDirection:'column',
-    justifyContent: 'space-around',
-    alignItems: 'center', 
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end', 
   },
   boldtext:{
     fontWeight:'bold',
