@@ -39,13 +39,13 @@ export default class LoginScreen extends React.Component {
     this.imageHeight = new Animated.Value(120);
     this.state = {
         isLoading: false,
-        email: '',
+        username: '',
         password: '',
         auth:{}
     }
   }
 
-  componentWillMount () {
+  /*componentWillMount () {
     console.log("mounted");
     this.keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', this.keyboardWillShow);
     this.keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', this.keyboardWillHide);
@@ -63,42 +63,42 @@ export default class LoginScreen extends React.Component {
       toValue: IMAGE_HEIGHT_SMALL,
     }).start();
     console.log('image reduced');
-  };
+  };*/
 
-  keyboardWillHide = (event) => {
+/*  keyboardWillHide = (event) => {
     Animated.timing(this.imageHeight, {
       duration: event.duration,
       toValue: IMAGE_HEIGHT,
     }).start();
-  };
+  };*/
 
-/*  openProgress() {
+  openProgress() {
         this.setState({ showProgress: true })
 
         setTimeout(
             () => this.setState({ showProgress: false }),
             2500
         );
-    }*/
+    }
 
-  /*onLoginPress = async () => {
-    const resetActionLogin = NavigationActions.reset({
+  onLoginPress = async () => {
+   /* const resetActionLogin = NavigationActions.reset({
       index: 0,
       actions: [
         NavigationActions.navigate({ routeName: 'Main'})
       ]
-    });
+    });*/
 
       this.openProgress();
 
-      fetch('http://api.mysnackbox.co/login', {
+      fetch('http://192.168.0.103:8081/users/authenticate', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: this.state.email,
+          username: this.state.username,
           password: this.state.password,
         })
       })
@@ -107,18 +107,23 @@ export default class LoginScreen extends React.Component {
         this.setState({
           auth: responseJson
         }, function() {
-         // console.log(this.state.auth);
-          if(this.state.auth.registered === true){
+          console.log(this.state.username);
+          console.log(this.state.password);
+          console.log(this.state.auth);
+          if(this.state.auth.success === true){
+            console.log("done");
+            alert("success");
             AsyncStorage.setItem("token",this.state.auth.token);
-            this.props.navigation.dispatch(resetActionLogin);
+            //this.props.navigation.dispatch(resetActionLogin);
           }
           else{
-            //console.log('here');
-            alert('Wrong email/password');
+            console.log("here");
+            alert('Wrong storeID/password');
+
           }
         });
       });
-  }*/
+  }
 
   render() {
     const { navigate } = this.props.navigation;
@@ -132,17 +137,27 @@ export default class LoginScreen extends React.Component {
                 <View style={{ flex:1,flexDirection:'column',alignItems:'center',marginTop:40 }}>
                   <View>
                     <Animated.Image style={styles.imageStyle} source={require('../assets/images/icon.png')}/>
+                    <Text style= {{ fontSize:20, fontWeight:'bold',color:'#2f95dc',marginBottom:50, alignSelf:'center' }}> STORES </Text>
                     <Item style={{ marginBottom:10, width:300 }} >
-                      <Input placeholder='StoreID / Phone number' keyboardType = 'numeric' returnKeyType="next" />
+                      <Input 
+                        placeholder='StoreID / Phone number' 
+                        keyboardType = 'numeric' 
+                        returnKeyType="next" 
+                        onChangeText={(username) => this.setState({username})}
+                        value={this.state.email} />
                     </Item>
                     <Item style={{ marginBottom:10, width:300 }}>
-                      <Input placeholder='Password' secureTextEntry returnKeyType="go"/>
+                      <Input 
+                        placeholder='Password' 
+                        secureTextEntry returnKeyType="go" 
+                        onChangeText={(password) => this.setState({password})}
+                        value={this.state.password}/>
                     </Item>
                   </View>
                   
-                  <View style={ styles.viewStyle }>
-                    <TouchableOpacity style={styles.register}>
-                      <Text style={{color:'#ffffff', fontWeight:'bold' }} onPress={this.onLoginPress}>LOGIN</Text>
+                  <View style={ styles.viewStyle } >
+                    <TouchableOpacity style={styles.register} onPress={this.onLoginPress}>
+                      <Text style={{color:'#ffffff', fontWeight:'bold' }}>LOGIN</Text>
                     </TouchableOpacity>
                   </View>
                   
@@ -172,7 +187,6 @@ const styles = StyleSheet.create({
   imageStyle: {
     height: 100,
     width: 100,
-    marginBottom:50,
     alignSelf:'center',
   },
   viewStyle:{
