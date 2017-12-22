@@ -8,9 +8,9 @@ import registerForPushNotificationsAsync from '../api/registerForPushNotificatio
 
 const RootStackNavigator = StackNavigator(
   {
-    Login: {
+    /*Login: {
       screen: LoginScreen,
-    },
+    },*/
     Main: {
       screen: MainTabNavigator,
     },

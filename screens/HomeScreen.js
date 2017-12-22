@@ -27,11 +27,13 @@ import {
   Icon,
   Item as FormItem, } from 'native-base';
 
-  const Item = Picker.Item;
+import Display from 'react-native-display';
+
+const Item = Picker.Item;
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title:'Past Orders',
+    title:'Orders',
   };
 
   constructor(props) {
@@ -40,13 +42,27 @@ export default class HomeScreen extends React.Component {
       isLoading: true,
       orders:{},
       selected1: "key0",
+      enable1: true,
+      enable2: true,
     }
+    console.log(this.state.selected1);
+    console.log(this.state.enable1);
+    console.log(this.state.enable2);
   }
 
   onValueChange(value: string) {
     this.setState({
       selected1: value
     });
+    {
+      value == 'key0' ? (this.state.enable1 = true , this.state.enable2 = true) : (value == 'key1' ? (this.state.enable2 = false , this.state.enable1 = true) : (this.state.enable2 = true , this.state.enable1 = false)) 
+    }
+    /*
+    console.log(this.state.selected1);
+    console.log(value);
+    console.log(this.state.enable1);
+    console.log(this.state.enable2);*/
+
   }
 
   render() {
@@ -83,8 +99,8 @@ export default class HomeScreen extends React.Component {
                     selectedValue={this.state.selected1}
                     onValueChange={this.onValueChange.bind(this)}>
                     <Item label="All Orders" value="key0" />
-                    <Item label="Last Week Orders" value="key1" />
-                    <Item label="Last Month Orders" value="key2" />
+                    <Item label="Active Orders" value="key1" />
+                    <Item label="Past Orders" value="key2" />
                   </Picker>
                 </View>
               </Button>
@@ -97,62 +113,67 @@ export default class HomeScreen extends React.Component {
             </Right>
           </View>
 
-          <Text style={ styles.boldtext }>Active Orders({orders.length})</Text>
-          <List dataArray={orders}
-            renderRow={(order) =>
-            <ListItem>
-              <View style={styles.view}>
-                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                    <Text>{order.id}</Text>
-                    <Text>₹{order.amount}</Text>
-                  </View>
+          <Display enable={this.state.enable1}>
+            <Text style={ styles.boldtext }>Active Orders({orders.length})</Text>
+            <List dataArray={orders}
+              renderRow={(order) =>
+              <ListItem>
+                <View style={styles.view}>
+                    <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                      <Text>{order.id}</Text>
+                      <Text>₹{order.amount}</Text>
+                    </View>
 
-                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                    {
-                      order.status == 'Waiting' ?
-                      (<Text style={{ color: '#2f95dc',textAlign: 'center' }}>{order.status}</Text>)
-                      :
-                      (
-                      order.status == 'Confirmed' ?
-                        (
-                          <Text style={{ color: '#ff1919',textAlign: 'center' }}>{order.status}</Text>
-                        )
+                    <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                      {
+                        order.status == 'Waiting' ?
+                        (<Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>{order.status}</Text>)
                         :
                         (
-                          <Text style={{ color: '#E69500',textAlign: 'center' }}>{order.status}</Text>
+                        order.status == 'Confirmed' ?
+                          (
+                            <Text style={{ color: '#00b200',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>{order.status}</Text>
+                          )
+                          :
+                          (
+                            <Text style={{ color: '#E69500',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>{order.status}</Text>
+                          )
                         )
-                      )
-                    }
-                    <Text note>{order.time}</Text>    
+                      }
+                      <Text note>{order.time}</Text>    
+                    </View>
                   </View>
-                </View>
-              </ListItem>
-            }>
-          </List>
+                </ListItem>
+              }>
+            </List>
+          </Display>
 
-          <Text style={{ fontWeight:'bold', paddingTop:20 }}>Past Orders({past_orders.length})</Text>
-           <List dataArray={past_orders}
-            renderRow={(order) =>
-            <ListItem>
-              <View style={styles.view}>
-                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                    <Text>{order.id}</Text>
-                    <Text>₹{order.amount}</Text>
-                  </View>
 
-                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                    {
-                      order.status == 'Delivered' ?
-                      (<Text style={{ color: '#2f95dc',textAlign: 'center' }}>{order.status}</Text>)
-                      :
-                      (<Text style={{ color: '#ff1919',textAlign: 'center' }}>{order.status}</Text>)
-                    }
-                    <Text note>{order.time}</Text>    
+          <Display enable={this.state.enable2}>
+            <Text style={{ fontWeight:'bold', paddingTop:20 }}>Past Orders({past_orders.length})</Text>
+             <List dataArray={past_orders}
+              renderRow={(order) =>
+              <ListItem>
+                <View style={styles.view}>
+                    <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                      <Text>{order.id}</Text>
+                      <Text>₹{order.amount}</Text>
+                    </View>
+
+                    <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                      {
+                        order.status == 'Delivered' ?
+                        (<Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>{order.status}</Text>)
+                        :
+                        (<Text style={{ color: '#ff1919',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>{order.status}</Text>)
+                      }
+                      <Text note>{order.time}</Text>    
+                    </View>
                   </View>
-                </View>
-              </ListItem>
-            }>
-          </List>
+                </ListItem>
+              }>
+            </List>
+            </Display>
         </Content>
       </Container>
     );
