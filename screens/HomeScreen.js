@@ -34,20 +34,48 @@ const Item = Picker.Item;
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
     title:'Orders',
-  };
+  }
 
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      orders:{},
+      past_orders:[],
+      active_orders:[],
       selected1: "key0",
       enable1: true,
       enable2: true,
     }
-    console.log(this.state.selected1);
+    /*console.log(this.state.selected1);
     console.log(this.state.enable1);
-    console.log(this.state.enable2);
+    console.log(this.state.enable2);*/
+  }
+
+  componentDidMount = async () => {
+    let token = await AsyncStorage.getItem('token');
+    
+    fetch('http://192.168.0.102:8082/users/orders/0001',{
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+          'Host': '192.168.0.102:8082'
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          past_orders:responseJson.past_orders,
+          active_orders:responseJson.active_orders,
+        }, function() {
+          console.log(this.state.past_orders);
+          console.log(this.state.active_orders);
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   onValueChange(value: string) {
@@ -62,7 +90,6 @@ export default class HomeScreen extends React.Component {
     console.log(value);
     console.log(this.state.enable1);
     console.log(this.state.enable2);*/
-
   }
 
   render() {
@@ -76,21 +103,24 @@ export default class HomeScreen extends React.Component {
     }*/
 
     const { navigate } = this.props.navigation;
-    var orders =   [{"id":"#11085","amount":"50","status":"Waiting","time":"31 Jan 1:24 pm"},
+   /* var orders =   [{"id":"#11085","amount":"50","status":"Waiting","time":"31 Jan 1:24 pm"},
                     {"id":"#11084","amount":"50","status":"Confirmed","time":"31 Jan 1:24 pm"},
                     {"id":"#11083","amount":"320","status":"Dispatched","time":"31 Jan 1:24 pm"},
                     {"id":"#11082","amount":"320","status":"Dispatched","time":"31 Jan 1:24 pm"}];
 
     var past_orders =[{"id":"#11081","amount":"50","status":"Delivered","time":"31 Jan 1:24 pm"},
                     {"id":"#11080","amount":"100","status":"Cancelled","time":"31 Jan 1:24 pm"},
-                    {"id":"#11079","amount":"320","status":"Delivered","time":"31 Jan 1:24 pm"}];
+                    {"id":"#11079","amount":"320","status":"Delivered","time":"31 Jan 1:24 pm"}];*/
     
     return (
       <Container style={styles.container}>
         <Content>
           <View style={{flexDirection:'row',justifyContent: 'space-between',paddingBottom:20}}>
             <Left>
-              <Button light block style={styles.refreshButtonStyle}>
+              <Button 
+                light 
+                block
+                style={styles.refreshButtonStyle}>
                 <View style={{ flex:2,flexDirection: 'row' ,alignItems: 'center', justifyContent:'flex-end'}}>
                   <Picker
                     style={ styles.pickerStyle }
@@ -106,7 +136,12 @@ export default class HomeScreen extends React.Component {
               </Button>
             </Left>
             <Right>
-              <Button iconLeft block light style={styles.refreshButtonStyle}>
+              <Button
+                onPress={this.componentDidMount} 
+                iconLeft 
+                block 
+                light 
+                style={styles.refreshButtonStyle}>
                 <Icon name='refresh' />
                 <Text> Refresh </Text>
               </Button>
@@ -114,14 +149,14 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <Display enable={this.state.enable1}>
-            <Text style={ styles.boldtext }>Active Orders({orders.length})</Text>
-            <List dataArray={orders}
+            <Text style={ styles.boldtext }>Active Orders({this.state.active_orders.length})</Text>
+            <List dataArray={this.state.active_orders}
               renderRow={(order) =>
               <ListItem>
                 <View style={styles.view}>
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                      <Text>{order.id}</Text>
-                      <Text>₹{order.amount}</Text>
+                      <Text>#{order.order_id}</Text>
+                      <Text>₹{order.total}</Text>
                     </View>
 
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
@@ -150,14 +185,14 @@ export default class HomeScreen extends React.Component {
 
 
           <Display enable={this.state.enable2}>
-            <Text style={{ fontWeight:'bold', paddingTop:20 }}>Past Orders({past_orders.length})</Text>
-             <List dataArray={past_orders}
+            <Text style={{ fontWeight:'bold', paddingTop:20 }}>Past Orders({this.state.past_orders.length})</Text>
+             <List dataArray={this.state.past_orders}
               renderRow={(order) =>
               <ListItem>
                 <View style={styles.view}>
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                      <Text>{order.id}</Text>
-                      <Text>₹{order.amount}</Text>
+                      <Text>#{order.order_id}</Text>
+                      <Text>₹{order.total}</Text>
                     </View>
 
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>

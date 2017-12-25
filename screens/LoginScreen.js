@@ -82,16 +82,16 @@ export default class LoginScreen extends React.Component {
     }
 
   onLoginPress = async () => {
-   /* const resetActionLogin = NavigationActions.reset({
+    const resetActionLogin = NavigationActions.reset({
       index: 0,
       actions: [
         NavigationActions.navigate({ routeName: 'Main'})
       ]
-    });*/
+    });
 
       this.openProgress();
 
-      fetch('http://192.168.0.103:8081/users/authenticate', {
+      fetch('http://192.168.0.102:8082/users/authenticate', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -114,7 +114,7 @@ export default class LoginScreen extends React.Component {
             console.log("done");
             alert("success");
             AsyncStorage.setItem("token",this.state.auth.token);
-            //this.props.navigation.dispatch(resetActionLogin);
+            this.props.navigation.dispatch(resetActionLogin);
           }
           else{
             console.log("here");
