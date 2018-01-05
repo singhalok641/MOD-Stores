@@ -91,7 +91,7 @@ export default class LoginScreen extends React.Component {
 
       this.openProgress();
 
-      fetch('http://192.168.0.102:8082/users/authenticate', {
+      fetch('http://192.168.0.105:8082/users/authenticate', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -112,12 +112,12 @@ export default class LoginScreen extends React.Component {
           console.log(this.state.auth);
           if(this.state.auth.success === true){
             console.log("done");
-            alert("success");
+            //alert("success");
             AsyncStorage.setItem("token",this.state.auth.token);
             this.props.navigation.dispatch(resetActionLogin);
           }
           else{
-            console.log("here");
+            console.log("Wrong credentials");
             alert('Wrong storeID/password');
 
           }
