@@ -46,9 +46,6 @@ export default class HomeScreen extends React.Component {
       enable1: true,
       enable2: true,
     }
-    /*console.log(this.state.selected1);
-    console.log(this.state.enable1);
-    console.log(this.state.enable2);*/
   }
 
   componentDidMount = async () => {

@@ -30,15 +30,14 @@ export default TabNavigator(
           case 'Home':
             iconName =
               Platform.OS === 'ios'
-                ? `ios-information-circle${focused ? '' : '-outline'}`
-                : 'md-information-circle';
+                ? `ios-list${focused ? '' : '-outline'}`: 'md-list';
             break;
           case 'Links':
             iconName = Platform.OS === 'ios' ? `ios-link${focused ? '' : '-outline'}` : 'md-list';
             break;
           case 'Settings':
             iconName =
-              Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-person';
+              Platform.OS === 'ios' ? `ios-person${focused ? '' : '-outline'}` : 'md-person';
         }
         return (
           <Ionicons

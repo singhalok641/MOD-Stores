@@ -136,7 +136,7 @@ export default class LoginScreen extends React.Component {
           console.log(this.state.password);
           console.log(this.state.auth);
           if(this.state.auth.success === true){
-            console.log("done");
+            //console.log("done");
             //alert("success");
             AsyncStorage.setItem("token",this.state.auth.token);
             this.props.navigation.dispatch(resetActionMain);
