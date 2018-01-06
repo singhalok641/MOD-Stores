@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "mod-stores",
+    "name": "MOD-Stores",
     "description": "No description",
     "slug": "mod-stores",
     "privacy": "public",
@@ -15,7 +15,13 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
-    }
+      "supportsTablet": true,
+      "bundleIdentifier": "com.modstores.client",
+      "buildNumber": "1.0.0",
+    },
+    "android": {
+      "package": "com.modstores.client",
+      "versionCode": 1,
+    },
   }
 }
