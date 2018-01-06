@@ -69,8 +69,8 @@ export default class HomeScreen extends React.Component {
           past_orders:responseJson.past_orders,
           active_orders:responseJson.active_orders,
         }, function() {
-          console.log(this.state.past_orders);
-          console.log(this.state.active_orders);
+          //console.log(this.state.past_orders);
+          //console.log(this.state.active_orders);
         });
       })
       .catch((error) => {

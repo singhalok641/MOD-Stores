@@ -38,10 +38,33 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.imageHeight = new Animated.Value(120);
     this.state = {
-        isLoading: false,
+        isLoading: true,
         username: '',
         password: '',
         auth:{}
+    }
+  }
+
+  componentDidMount = async () => {
+    const resetActionMain = NavigationActions.reset({
+      index: 0,
+      actions: [
+        NavigationActions.navigate({ routeName: 'Main'})
+      ]
+    });
+
+    try {
+      let token = await AsyncStorage.getItem('token');
+      console.log(token);
+      if(token!== null) {
+        this.props.navigation.dispatch(resetActionMain);
+      }
+      this.setState({
+          isLoading: false
+        }); 
+    }
+    catch (error) {
+      alert(error);
     }
   }
 
@@ -82,12 +105,14 @@ export default class LoginScreen extends React.Component {
     }
 
   onLoginPress = async () => {
-    const resetActionLogin = NavigationActions.reset({
+    const resetActionMain = NavigationActions.reset({
       index: 0,
       actions: [
         NavigationActions.navigate({ routeName: 'Main'})
       ]
     });
+
+      console.log("Login");
 
       this.openProgress();
 
@@ -114,7 +139,7 @@ export default class LoginScreen extends React.Component {
             console.log("done");
             //alert("success");
             AsyncStorage.setItem("token",this.state.auth.token);
-            this.props.navigation.dispatch(resetActionLogin);
+            this.props.navigation.dispatch(resetActionMain);
           }
           else{
             console.log("Wrong credentials");
@@ -125,8 +150,21 @@ export default class LoginScreen extends React.Component {
       });
   }
 
+  /*focusPasswordInput() {
+    this._passwordInput._textInput.focus();
+  }*/
+
   render() {
+    
     const { navigate } = this.props.navigation;
+
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, justifyContent:'center', alignItems:'center'}}>
+          <ActivityIndicator color='#2f95dc' size='large'/>
+        </View>
+      );
+    }
 
     return (
       <KeyboardAvoidingView
@@ -142,14 +180,17 @@ export default class LoginScreen extends React.Component {
                       <Input 
                         placeholder='StoreID / Phone number' 
                         keyboardType = 'numeric' 
-                        returnKeyType="next" 
+                        returnKeyType="next"
+                        //autoFocus={true} 
                         onChangeText={(username) => this.setState({username})}
                         value={this.state.email} />
                     </Item>
                     <Item style={{ marginBottom:10, width:300 }}>
                       <Input 
                         placeholder='Password' 
-                        secureTextEntry returnKeyType="go" 
+                        secureTextEntry 
+                        //autoFocus={true}
+                        returnKeyType="go"
                         onChangeText={(password) => this.setState({password})}
                         value={this.state.password}/>
                     </Item>

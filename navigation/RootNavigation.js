@@ -1,7 +1,6 @@
 import { Notifications } from 'expo';
 import React from 'react';
 import { StackNavigator } from 'react-navigation';
-
 import MainTabNavigator from './MainTabNavigator';
 import LoginScreen from '../screens/LoginScreen';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
@@ -25,7 +24,12 @@ const RootStackNavigator = StackNavigator(
 );
 
 export default class RootNavigator extends React.Component {
-  componentDidMount() {
+  
+  constructor(props) {
+    super(props);
+    }
+
+  componentDidMount() {    
     this._notificationSubscription = this._registerForPushNotifications();
   }
 
