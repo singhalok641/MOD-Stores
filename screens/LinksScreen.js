@@ -1,84 +1,122 @@
 import React from 'react';
 import { 
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
-  AppRegistry, 
+  StyleSheet,
 } from 'react-native';
-import { Container, Header, Content, List, ListItem, Thumbnail, Body } from 'native-base';
-import { VictoryChart, VictoryBar, VictoryTheme } from "victory-native";
-
-const data = [
-  {day: 'Mon', earnings: 1300},
-  {day: 'Tue', earnings: 1650},
-  {day: 'Wed', earnings: 1425},
-  {day: 'Thu', earnings: 1200},
-  {day: 'Fri', earnings: 800},
-  {day: 'Sat', earnings: 1600},
-  {day: 'Sun', earnings: 1900},
-];
+import { 
+  Container, 
+  Header, 
+  Content, 
+  List, 
+  ListItem, 
+  Thumbnail, 
+  Text,
+  Body, 
+  Left, 
+  Right, 
+  Badge, 
+  Picker, 
+  Form, 
+  Icon,
+  Item as FormItem, } from 'native-base';
+import { Notifications,} from 'expo';
+import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
-    title: 'Overview',
+    title: 'Order Requests',
   };
 
+  state = {
+    notification: {},
+  };
+
+  componentWillMount() {
+    registerForPushNotificationsAsync();
+
+    // Handle notifications that are received or selected while the app
+    // is open. If the app was closed and then opened by tapping the
+    // notification (rather than just tapping the app icon to open it),
+    // this function will fire on the next tick after the app starts
+    // with the notification data.
+    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+  }
+
+  _handleNotification = (notification) => {
+    this.setState({notification: notification});
+  };
+
+
   render() {
+    console.log(JSON.stringify(this.state.notification.data));
+
     return (
       <Container style={styles.container}>
-      <Content>
-        <Text style={styles.headtext}>Summary</Text>
-      </Content>
-     </Container>
+        <Content>
+        {/*<Text>Origin: {this.state.notification.origin}</Text>
+        <Text>Data: {JSON.stringify(this.state.notification.data.data.status)}</Text>*/}
+          <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+            <Text note style={{fontSize: 20}}> No order requests yet ! </Text>
+          </View>
+
+        </Content>
+      </Container>
     )
   }
 }
 
 const styles = StyleSheet.create({
- container: {
+  container: {
     flex: 1,
+    paddingTop: 15,
     backgroundColor: '#fff',
+    paddingLeft:10,
   },
-  view: {
-    flex:1,
-    flexDirection:'row',
-    justifyContent: 'space-between',
-    padding: 12,
-    paddingBottom: 0
+  boldcolortext:{
+    fontWeight:'bold',
+    color: '#3498db'
   },
   boldtext:{
     fontWeight:'bold',
-    fontSize: 20,
   },
-  innerview: {
+  lefttext:{
+    fontWeight:'bold',
+    fontSize: 30,
+    color: '#2980b9'
+  },
+   pickerStyle: {
+    width:160, 
+    height:20, 
+    justifyContent:'flex-end', 
+    alignItems:'center', 
+    color:'#000',
+  },
+  view: {
+    flex:1,
     flexDirection:'column',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'stretch' 
   },
-  normaltext:{
-    fontSize: 16,
+  innerviewleft: {
+    flexDirection:'column',
+    justifyContent: 'flex-start',
+    alignItems:'flex-start'
   },
-  headtext:{
-    padding: 12,
-    paddingBottom: 0,
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#3498db' 
+  innerviewright: {
+    flexDirection:'column',
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end', 
   },
-  headview:{
-    height: 48,
-    backgroundColor: '#3498db'
+  boldtext:{
+    fontWeight:'bold',
   },
-  graphview:{
-    paddingTop:0,
-    padding: 12
+  refreshButtonStyle:{
+    backgroundColor: 'rgba(0,0,0,0.05)',
+    borderRadius:10,
   },
-  bodytext:{
-    padding: 12,
-    paddingTop:8,
-    fontSize: 18
-  }
+  refreshIconStyle: {
+    fontSize: 20,
+    height: 22,
+    color: 'black',
+  },
 });

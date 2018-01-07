@@ -65,6 +65,7 @@ export default class HomeScreen extends React.Component {
         this.setState({
           past_orders:responseJson.past_orders,
           active_orders:responseJson.active_orders,
+          isLoading:false,
         }, function() {
           //console.log(this.state.past_orders);
           //console.log(this.state.active_orders);
@@ -90,24 +91,15 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-
-   /* if (this.state.isLoading) {
+    if (this.state.isLoading) {
       return (
         <View style={{flex: 1, paddingTop: 20}}>
           <ActivityIndicator />
         </View>
       );
-    }*/
+    }
 
     const { navigate } = this.props.navigation;
-   /* var orders =   [{"id":"#11085","amount":"50","status":"Waiting","time":"31 Jan 1:24 pm"},
-                    {"id":"#11084","amount":"50","status":"Confirmed","time":"31 Jan 1:24 pm"},
-                    {"id":"#11083","amount":"320","status":"Dispatched","time":"31 Jan 1:24 pm"},
-                    {"id":"#11082","amount":"320","status":"Dispatched","time":"31 Jan 1:24 pm"}];
-
-    var past_orders =[{"id":"#11081","amount":"50","status":"Delivered","time":"31 Jan 1:24 pm"},
-                    {"id":"#11080","amount":"100","status":"Cancelled","time":"31 Jan 1:24 pm"},
-                    {"id":"#11079","amount":"320","status":"Delivered","time":"31 Jan 1:24 pm"}];*/
     
     return (
       <Container style={styles.container}>

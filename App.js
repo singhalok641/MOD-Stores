@@ -9,6 +9,12 @@ export default class App extends React.Component {
     isLoadingComplete: false,
   };
 
+  componentDidMount() {
+    Font.loadAsync({
+      'Roboto_medium': require('./assets/fonts/Roboto-Medium.ttf'),
+    });
+  }
+
   render() {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
