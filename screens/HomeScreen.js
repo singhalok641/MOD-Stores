@@ -51,7 +51,7 @@ export default class HomeScreen extends React.Component {
   componentDidMount = async () => {
     let token = await AsyncStorage.getItem('token');
     
-    fetch('http://192.168.0.105:8082/users/orders/0001',{
+    fetch('http://192.168.0.105:8082/stores/orders/0001',{
         method: 'GET',
         headers: {
           'Accept': 'application/json',

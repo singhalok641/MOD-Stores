@@ -116,7 +116,7 @@ export default class LoginScreen extends React.Component {
 
       this.openProgress();
 
-      fetch('http://192.168.0.105:8082/users/authenticate', {
+      fetch('http://192.168.0.105:8082/stores/authenticate', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
