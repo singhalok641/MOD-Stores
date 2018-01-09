@@ -22,7 +22,7 @@ import {
 import { Notifications,} from 'expo';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
-export default class LinksScreen extends React.Component {
+export default class OrderRequestsScreen extends React.Component {
   static navigationOptions = {
     title: 'Order Requests',
   };

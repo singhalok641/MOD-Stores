@@ -2,9 +2,7 @@ import React from 'react';
 import { SectionList, Image, StyleSheet, Text, View } from 'react-native';
 import { Constants } from 'expo';
 
-
-
-export default class SettingsScreen extends React.Component {
+export default class ProfileScreen extends React.Component {
   static navigationOptions = {
     title: 'My Account',
   };

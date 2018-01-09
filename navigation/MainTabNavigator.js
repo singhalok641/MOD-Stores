@@ -1,13 +1,11 @@
 import React from 'react';
 import { Platform } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import {SimpleLineIcons} from '@expo/vector-icons';
 import { TabNavigator, TabBarBottom } from 'react-navigation';
-
 import Colors from '../constants/Colors';
-
 import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import OrderRequestsScreen from '../screens/OrderRequestsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 export default TabNavigator(
   {
@@ -15,10 +13,10 @@ export default TabNavigator(
       screen: HomeScreen,
     },
     Links: {
-      screen: LinksScreen,
+      screen: OrderRequestsScreen,
     },
     Settings: {
-      screen: SettingsScreen,
+      screen: ProfileScreen,
     },
   },
   {
@@ -28,21 +26,18 @@ export default TabNavigator(
         let iconName;
         switch (routeName) {
           case 'Home':
-            iconName =
-              Platform.OS === 'ios'
-                ? `ios-list${focused ? '' : '-outline'}`: 'md-list';
+            iconName = Platform.OS === 'ios'? `bag${focused ? '' : '-outline'}`: 'bag';
             break;
           case 'Links':
-            iconName = Platform.OS === 'ios' ? `ios-link${focused ? '' : '-outline'}` : 'md-list';
+            iconName = Platform.OS === 'ios' ? `bag${focused ? '' : '-outline'}` : 'bag';
             break;
           case 'Settings':
-            iconName =
-              Platform.OS === 'ios' ? `ios-person${focused ? '' : '-outline'}` : 'md-person';
+            iconName = Platform.OS === 'ios' ? `user${focused ? '' : '-outline'}` : 'user';
         }
         return (
-          <Ionicons
+          <SimpleLineIcons
             name={iconName}
-            size={28}
+            size={22}
             style={{ marginBottom: -3 }}
             color={focused ? Colors.tabIconSelected : Colors.tabIconDefault}
           />
