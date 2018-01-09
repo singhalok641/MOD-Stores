@@ -50,8 +50,10 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount = async () => {
     let token = await AsyncStorage.getItem('token');
+    let id = await AsyncStorage.getItem('store_id');
+    console.log(id);
     
-    fetch('http://192.168.0.105:8082/stores/orders/0001',{
+    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -83,11 +85,6 @@ export default class HomeScreen extends React.Component {
     {
       value == 'key0' ? (this.state.enable1 = true , this.state.enable2 = true) : (value == 'key1' ? (this.state.enable2 = false , this.state.enable1 = true) : (this.state.enable2 = true , this.state.enable1 = false)) 
     }
-    /*
-    console.log(this.state.selected1);
-    console.log(value);
-    console.log(this.state.enable1);
-    console.log(this.state.enable2);*/
   }
 
   render() {

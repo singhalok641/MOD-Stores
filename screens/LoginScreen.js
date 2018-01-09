@@ -39,17 +39,18 @@ export default class LoginScreen extends React.Component {
     this.imageHeight = new Animated.Value(120);
     this.state = {
         isLoading: true,
-        username: '',
+        store_id: '',
         password: '',
         auth:{}
     }
   }
 
   componentDidMount = async () => {
+    
     const resetActionMain = NavigationActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: 'Main'})
+        NavigationActions.navigate({ routeName: 'Main' })
       ]
     });
 
@@ -108,11 +109,11 @@ export default class LoginScreen extends React.Component {
     const resetActionMain = NavigationActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: 'Main'})
+        NavigationActions.navigate({ routeName: 'Main' }),
       ]
     });
 
-      console.log("Login");
+      //console.log("Login");
 
       this.openProgress();
 
@@ -123,7 +124,7 @@ export default class LoginScreen extends React.Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          username: this.state.username,
+          store_id: this.state.store_id,
           password: this.state.password,
         })
       })
@@ -132,13 +133,15 @@ export default class LoginScreen extends React.Component {
         this.setState({
           auth: responseJson
         }, function() {
-          console.log(this.state.username);
-          console.log(this.state.password);
-          console.log(this.state.auth);
+          //console.log("auth"+this.state.auth);
+          //console.log(this.state.store_id);
+          //console.log(this.state.password);
+          //console.log(this.state.auth.store.store_id);
           if(this.state.auth.success === true){
             //console.log("done");
             //alert("success");
             AsyncStorage.setItem("token",this.state.auth.token);
+            AsyncStorage.setItem("store_id",this.state.auth.store.store_id);
             this.props.navigation.dispatch(resetActionMain);
           }
           else{
@@ -178,12 +181,12 @@ export default class LoginScreen extends React.Component {
                     <Text style= {{ fontSize:20, fontWeight:'bold',color:'#2f95dc',marginBottom:50, alignSelf:'center' }}> STORES </Text>
                     <Item style={{ marginBottom:10, width:300 }} >
                       <Input 
-                        placeholder='StoreID / Phone number' 
+                        placeholder='StoreID' 
                         keyboardType = 'numeric' 
                         returnKeyType="next"
                         //autoFocus={true} 
-                        onChangeText={(username) => this.setState({username})}
-                        value={this.state.email} />
+                        onChangeText={(store_id) => this.setState({store_id})}
+                        value={this.state.store_id} />
                     </Item>
                     <Item style={{ marginBottom:10, width:300 }}>
                       <Input 
