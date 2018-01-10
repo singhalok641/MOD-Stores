@@ -15,6 +15,8 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-23.0.0.tar.gz",
     "react-native-display": "^1.0.8",
     "react-native-elements": "^0.18.5",
+    "react-native-icons": "^0.7.1",
+    "react-native-image-placeholder": "^1.0.14",
     "react-native-simple-dialogs": "^0.3.1",
     "react-native-svg": "^6.0.0",
     "react-navigation": "^1.0.0-beta.19",

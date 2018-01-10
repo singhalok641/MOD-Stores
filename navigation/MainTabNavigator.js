@@ -15,7 +15,7 @@ export default TabNavigator(
     Links: {
       screen: OrderRequestsScreen,
     },
-    Settings: {
+    Account: {
       screen: ProfileScreen,
     },
   },
@@ -31,7 +31,7 @@ export default TabNavigator(
           case 'Links':
             iconName = Platform.OS === 'ios' ? `bag${focused ? '' : '-outline'}` : 'bag';
             break;
-          case 'Settings':
+          case 'Account':
             iconName = Platform.OS === 'ios' ? `user${focused ? '' : '-outline'}` : 'user';
         }
         return (
