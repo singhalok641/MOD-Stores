@@ -29,7 +29,7 @@ export default class OrderRequestsScreen extends React.Component {
 
   state = {
     notification: {},
-  };
+  }
 
   componentWillMount() {
     registerForPushNotificationsAsync();
@@ -46,10 +46,8 @@ export default class OrderRequestsScreen extends React.Component {
     this.setState({notification: notification});
   };
 
-
   render() {
     console.log(JSON.stringify(this.state.notification.data));
-
     return (
       <Container style={styles.container}>
         <Content>

@@ -26,7 +26,6 @@ import {
   Button,
   Icon,
   Item as FormItem, } from 'native-base';
-
 import Display from 'react-native-display';
 
 const Item = Picker.Item;
