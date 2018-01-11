@@ -2,6 +2,7 @@ import React from 'react';
 import { 
   View,
   StyleSheet,
+  ScrollView,
 } from 'react-native';
 import { 
   Container, 
@@ -24,7 +25,7 @@ import registerForPushNotificationsAsync from '../api/registerForPushNotificatio
 
 export default class OrderRequestsScreen extends React.Component {
   static navigationOptions = {
-    title: 'Order Requests',
+    header: null,
   };
 
   state = {
@@ -49,15 +50,27 @@ export default class OrderRequestsScreen extends React.Component {
   render() {
     console.log(JSON.stringify(this.state.notification.data));
     return (
-      <Container style={styles.container}>
-        <Content>
+      <Container>
+        <Header style={{  backgroundColor:'#fff' }}>
+          <View style={ styles.headerViewStyle }>
+            <View style={{ marginTop:0 ,marginLeft:0, marginRight:0 , flexDirection: 'row', alignItems: 'center'  }}>
+              <View style = {styles.HeaderShapeView}>
+                <Text style = {{paddingTop: 0 ,fontSize:20, color: '#555555', fontWeight: 'bold' }}>Order Requests</Text>
+              </View>
+            </View>
+          </View>
+        </Header>
+        <View style={styles.container}>
         {/*<Text>Origin: {this.state.notification.origin}</Text>
         <Text>Data: {JSON.stringify(this.state.notification.data.data.status)}</Text>*/}
+        <ScrollView
+            contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
           <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
             <Text note style={{fontSize: 20}}> No order requests yet ! </Text>
           </View>
 
-        </Content>
+        </ScrollView>
+        </View>
       </Container>
     )
   }
@@ -66,13 +79,23 @@ export default class OrderRequestsScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: '#fff',
-    paddingLeft:10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop:10,
   },
   boldcolortext:{
     fontWeight:'bold',
     color: '#3498db'
+  },
+  headerViewStyle:{
+    flex:1, 
+    flexDirection: 'row',
+  },
+  HeaderShapeView:{
+    paddingLeft: 10,
+    justifyContent : 'center',
+    borderRadius: 1,
   },
   boldtext:{
     fontWeight:'bold',

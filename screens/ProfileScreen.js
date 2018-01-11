@@ -22,11 +22,10 @@ import {
   Right, 
   Badge, 
   Picker,
-  Form, 
-  Button,
-  Icon,
+  Form,
   Item as FormItem } from 'native-base';
 import Display from 'react-native-display';
+import { Button, Icon } from 'react-native-elements';
 
 const image=require('../assets/images/icon.png');
 
@@ -50,13 +49,22 @@ export default class ProfileScreen extends React.Component {
  
   render() {
     return (
-      <Container>  
+      <Container>
+        <Header style={{  backgroundColor:'#fff' }}>
+          <View style={ styles.headerViewStyle }>
+            <View style={{ marginTop:0 ,marginLeft:0, marginRight:0 , flexDirection: 'row', alignItems: 'center'  }}>
+              <View style = {styles.HeaderShapeView}>
+                <Text style = {{paddingTop: 0 ,fontSize:20, color: '#555555', fontWeight: 'bold' }}>Account</Text>
+              </View>
+            </View>
+          </View>
+        </Header>  
         <View style={styles.container}>
           <ScrollView>
              <View style={styles.view}>
               <View>
                 <Text style={styles.name}>Delhi Pharmacy</Text>
-                <Text note style={{fontSize :15}}>Indirapuram</Text>
+                <Text note style={{fontSize :16}}>Indirapuram</Text>
               </View>
               
                 <Image style={styles.pic} resizeMode="contain" source={image}/>
@@ -69,9 +77,9 @@ export default class ProfileScreen extends React.Component {
                   <Text style={styles.op_name}>My Profile</Text>
                 </View>
                   <Icon
-                    name='ios-contact'
-                    type='Iconicons'
-                    color='#666666'
+                    name='shop'
+                    type='entypo'
+                    color='#0693e3'
                     size={28}
                     />
                </ListItem>
@@ -80,9 +88,9 @@ export default class ProfileScreen extends React.Component {
                   <Text style={styles.op_name}>Earnings</Text>
                 </View>
                   <Icon
-                    name='ios-flash'
-                    type='Iconicons'
-                    color='#666666'
+                    name='monetization-on'
+                    type='material'
+                    color='#2d8659'
                     size={28}
                     />
                </ListItem>
@@ -91,9 +99,9 @@ export default class ProfileScreen extends React.Component {
                   <Text style={styles.op_name}>Get help</Text>
                 </View>
                   <Icon
-                    name='ios-help-circle'
-                    type='Iconicons'
-                    color='#666666'
+                    name='help-with-circle'
+                    type='entypo'
+                    color='#2d5d86'
                     size={28}
                     />
                </ListItem>
@@ -103,9 +111,9 @@ export default class ProfileScreen extends React.Component {
                   <Text style={styles.op_name}>Logout</Text>
                 </View>
                   <Icon
-                    name='ios-power'
-                    type='Iconicons'
-                    color='#666666'
+                    name='power-settings-new'
+                    type='material'
+                    color='#f47373'
                     size={28}
                     />
                </ListItem>
@@ -121,19 +129,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop:10,
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop:20,
 
   },
   view: {
-    paddingLeft:20,
-    paddingRight:20,
+    paddingLeft:25,
+    paddingRight:25,
     flex:1,
-    paddingTop:45,
+    
     flexDirection:'row',
     alignItems : 'center',
     justifyContent : 'space-between'
+  },
+  headerViewStyle:{
+    flex:1, 
+    flexDirection: 'row',
+  },
+  HeaderShapeView:{
+    paddingLeft: 10,
+    justifyContent : 'center',
+    borderRadius: 1,
   },
   name:{
     color:'#555555',
@@ -141,9 +158,8 @@ const styles = StyleSheet.create({
     fontWeight : 'bold'
   },
   pic:{
-
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     borderRadius :15
   },
   
@@ -153,7 +169,7 @@ const styles = StyleSheet.create({
     justifyContent : 'space-between'
   },
   op_name:{
-    fontSize:19,
+    fontSize:18,
     color:'#666666',
   }
 });

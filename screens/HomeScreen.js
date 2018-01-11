@@ -32,8 +32,8 @@ const Item = Picker.Item;
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    title:'Orders',
-  }
+    header: null,
+  };
 
   constructor(props) {
     super(props);
@@ -87,26 +87,48 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) {
+    
+     if (this.state.isLoading) {
       return (
-        <View style={{flex: 1, paddingTop: 20}}>
+        <Container>
+        <Header style={{  backgroundColor:'#fff' }}>
+          <View style={ styles.headerViewStyle }>
+            <View style={{ marginTop:0 ,marginLeft:0, marginRight:0 , flexDirection: 'row', alignItems: 'center'  }}>
+              <View style = {styles.HeaderShapeView}>
+                <Text style = {{paddingTop: 0 ,fontSize:20, color: '#555555', fontWeight: 'bold' }}>Orders</Text>
+              </View>
+            </View>
+          </View>
+        </Header>
+        <View style={styles.container}>
           <ActivityIndicator />
         </View>
+        </Container>
       );
-    }
+    }   
 
     const { navigate } = this.props.navigation;
     
     return (
-      <Container style={styles.container}>
-        <Content>
-          <View style={{flexDirection:'row',justifyContent: 'space-between',paddingBottom:20}}>
+      <Container>
+        <Header style={{  backgroundColor:'#fff' }}>
+          <View style={ styles.headerViewStyle }>
+            <View style={{ marginTop:0 ,marginLeft:0, marginRight:0 , flexDirection: 'row', alignItems: 'center'  }}>
+              <View style = {styles.HeaderShapeView}>
+                <Text style = {{paddingTop: 0 ,fontSize:20, color: '#555555', fontWeight: 'bold' }}>Orders</Text>
+              </View>
+            </View>
+          </View>
+        </Header>
+
+        <View style={styles.container}>
+          <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems: 'center' ,paddingBottom:20}}>
             <Left>
               <Button 
                 light 
                 block
                 style={styles.refreshButtonStyle}>
-                <View style={{ flex:2,flexDirection: 'row' ,alignItems: 'center', justifyContent:'flex-end'}}>
+                <View style={{ flex:2,flexDirection: 'row' ,alignItems: 'center', justifyContent:'center',paddingLeft:12}}>
                   <Picker
                     style={ styles.pickerStyle }
                     iosHeader="Select one"
@@ -127,14 +149,14 @@ export default class HomeScreen extends React.Component {
                 block 
                 light 
                 style={styles.refreshButtonStyle}>
-                <Icon name='refresh' />
-                <Text> Refresh </Text>
+                <Icon color='#555555' name='refresh' />
+                <Text color='#555555'> Refresh </Text>
               </Button>
             </Right>
           </View>
-
+          <ScrollView contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
           <Display enable={this.state.enable1}>
-            <Text style={ styles.boldtext }>Active Orders({this.state.active_orders.length})</Text>
+            <Text style={{ fontWeight:'bold', paddingBottom:20}}>Active Orders ({this.state.active_orders.length})</Text>
             <List dataArray={this.state.active_orders}
               renderRow={(order) =>
               <ListItem>
@@ -170,7 +192,7 @@ export default class HomeScreen extends React.Component {
 
 
           <Display enable={this.state.enable2}>
-            <Text style={{ fontWeight:'bold', paddingTop:20 }}>Past Orders({this.state.past_orders.length})</Text>
+            <Text style={{ fontWeight:'bold'}}>Past Orders ({this.state.past_orders.length})</Text>
              <List dataArray={this.state.past_orders}
               renderRow={(order) =>
               <ListItem>
@@ -194,7 +216,8 @@ export default class HomeScreen extends React.Component {
               }>
             </List>
             </Display>
-        </Content>
+            </ScrollView>
+        </View>
       </Container>
     );
   }
@@ -203,9 +226,20 @@ export default class HomeScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 15,
     backgroundColor: '#fff',
-    paddingLeft:10,
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop:15,
+
+  },
+  headerViewStyle:{
+    flex:1, 
+    flexDirection: 'row',
+  },
+  HeaderShapeView:{
+    paddingLeft: 10,
+    justifyContent : 'center',
+    borderRadius: 1,
   },
   boldcolortext:{
     fontWeight:'bold',
@@ -247,11 +281,12 @@ const styles = StyleSheet.create({
   },
   refreshButtonStyle:{
     backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius:10,
+    borderRadius:5,
+    width:160,
   },
   refreshIconStyle: {
     fontSize: 20,
-    height: 22,
+    height: 20,
     color: 'black',
   },
 });
