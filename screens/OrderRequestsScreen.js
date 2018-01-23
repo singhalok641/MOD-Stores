@@ -22,6 +22,7 @@ import {
   Item as FormItem, } from 'native-base';
 import { Notifications,} from 'expo';
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+import Modal from 'react-native-modalbox';
 
 export default class OrderRequestsScreen extends React.Component {
   static navigationOptions = {
@@ -60,13 +61,28 @@ export default class OrderRequestsScreen extends React.Component {
             </View>
           </View>
         </Header>
+
         <View style={styles.container}>
         {/*<Text>Origin: {this.state.notification.origin}</Text>
         <Text>Data: {JSON.stringify(this.state.notification.data.data.status)}</Text>*/}
         <ScrollView
             contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-          <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-            <Text note style={{fontSize: 20}}> No order requests yet ! </Text>
+          <View style={styles.view}>
+            <List>
+              <ListItem>
+                <View style={styles.view}>
+                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                    <Text>#11007</Text>
+                    <Text>₹ 302</Text>
+                  </View>
+
+                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                    <Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>Request</Text>                      
+                    <Text note>12:07 pm</Text>    
+                  </View>
+                </View>
+              </ListItem>
+            </List>
           </View>
 
         </ScrollView>
@@ -111,6 +127,9 @@ const styles = StyleSheet.create({
     justifyContent:'flex-end', 
     alignItems:'center', 
     color:'#000',
+  },
+  modal: {
+    justifyContent: 'flex-start',
   },
   view: {
     flex:1,
