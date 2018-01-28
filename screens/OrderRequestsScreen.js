@@ -34,10 +34,8 @@ import {
 
 import { Button, Icon,  } from 'react-native-elements';
 import Modal from 'react-native-modalbox';
-import Frisbee from 'frisbee';
 
 var screen = Dimensions.get('window');
-const image = require('../assets/images/whis.jpg');
 
 export default class OrdersScreen extends React.Component {
   static navigationOptions = {
