@@ -9,10 +9,10 @@ import ProfileScreen from '../screens/ProfileScreen';
 
 export default TabNavigator(
   {
-    Home: {
+    Orders: {
       screen: HomeScreen,
     },
-    Links: {
+    Requests: {
       screen: OrderRequestsScreen,
     },
     Account: {
@@ -25,11 +25,11 @@ export default TabNavigator(
         const { routeName } = navigation.state;
         let iconName;
         switch (routeName) {
-          case 'Home':
+          case 'Orders':
             iconName = Platform.OS === 'ios'? `bag${focused ? '' : '-outline'}`: 'bag';
             break;
-          case 'Links':
-            iconName = Platform.OS === 'ios' ? `bag${focused ? '' : '-outline'}` : 'bag';
+          case 'Requests':
+            iconName = Platform.OS === 'ios' ? `list${focused ? '' : '-outline'}` : 'list';
             break;
           case 'Account':
             iconName = Platform.OS === 'ios' ? `user${focused ? '' : '-outline'}` : 'user';

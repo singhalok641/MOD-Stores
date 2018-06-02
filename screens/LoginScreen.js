@@ -177,8 +177,8 @@ export default class LoginScreen extends React.Component {
           <Container style={ styles.container }>
                 <View style={{ flex:1,flexDirection:'column',alignItems:'center',marginTop:40 }}>
                   <View>
-                    <Animated.Image style={styles.imageStyle} source={require('../assets/images/icon.png')}/>
-                    <Text style= {{ fontSize:20, fontWeight:'bold',color:'#2f95dc',marginBottom:50, alignSelf:'center' }}> STORES </Text>
+                    <Animated.Image resizeMode="contain" style={styles.imageStyle} source={require('../assets/images/icon2.png')}/>
+                    <Text style= {{ fontSize:18, fontWeight:'bold',color:'#0A9EFC',marginBottom:45, alignSelf:'center' }}> STORES </Text>
                     <Item style={{ marginBottom:10, width:300 }} >
                       <Input 
                         placeholder='StoreID' 
@@ -232,6 +232,7 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     alignSelf:'center',
+
   },
   viewStyle:{
     width: 300,
