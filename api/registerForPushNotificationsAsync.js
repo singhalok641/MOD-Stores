@@ -1,8 +1,8 @@
 import { Constants, Permissions, Notifications } from 'expo';
 
 // Example server, implemented in Rails: https://git.io/vKHKv
-const PUSH_ENDPOINT = 'http://192.168.0.105:8082/stores/register-token-device';
-const secretCode = 'MODAPP';
+const PUSH_ENDPOINT = 'http://159.89.168.254:8082/stores/register-token-device';
+const secretCode = 'yoursecret';
 
 export default (async function registerForPushNotificationsAsync() {
   // Remote notifications do not work in simulators, only on device
@@ -37,6 +37,6 @@ export default (async function registerForPushNotificationsAsync() {
   .then((response)=> response.json())
   .then((responseJson) => {
       console.log(responseJson);
-      //console.log(secretCode);
+      console.log(secretCode);
     });
   });

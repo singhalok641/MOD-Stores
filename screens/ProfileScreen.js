@@ -38,15 +38,39 @@ export default class ProfileScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected1: "key0"
+      auth: {},
+      store: {}
     };
   }
 
-  onValueChange(value: string) {
-    this.setState({
-      selected1: value
-    });
-  }
+  componentDidMount = async () => {
+    let token = await AsyncStorage.getItem('token');
+    fetch(`http://159.89.168.254:8082/stores/profile`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
+        'Host': 'http://159.89.168.254:8082'
+      }
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        auth: responseJson
+      }, function() {
+          if(this.state.auth.success === true){
+            this.setState({
+              store: this.state.auth.store      
+            })
+          }
+          else{
+            console.log("Error");
+            //alert('Wrong storeID/password');
+          }
+      });
+    })
+  }  
  
   render() {
     return (
@@ -58,9 +82,7 @@ export default class ProfileScreen extends React.Component {
                 <Text style={styles.name}>Delhi Pharmacy</Text>
                 <Text note style={{fontSize :15}}>Indirapuram</Text>
               </View>
-              
                 <Image style={styles.pic} resizeMode="contain" source={image}/>
-              
              </View>
 
              <List style={{paddingTop :20}}>
@@ -70,7 +92,7 @@ export default class ProfileScreen extends React.Component {
                 </View>
                   <Icon
                     name='ios-contact'
-                    type='Iconicons'
+                    type='Ionicons'
                     color='#666666'
                     size={28}
                     />
@@ -81,7 +103,7 @@ export default class ProfileScreen extends React.Component {
                 </View>
                   <Icon
                     name='ios-flash'
-                    type='Iconicons'
+                    type='Ionicons'
                     color='#666666'
                     size={28}
                     />
@@ -92,7 +114,7 @@ export default class ProfileScreen extends React.Component {
                 </View>
                   <Icon
                     name='ios-help-circle'
-                    type='Iconicons'
+                    type='Ionicons'
                     color='#666666'
                     size={28}
                     />
@@ -104,7 +126,7 @@ export default class ProfileScreen extends React.Component {
                 </View>
                   <Icon
                     name='ios-power'
-                    type='Iconicons'
+                    type='Ionicons'
                     color='#666666'
                     size={28}
                     />

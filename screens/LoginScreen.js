@@ -58,11 +58,11 @@ export default class LoginScreen extends React.Component {
       let token = await AsyncStorage.getItem('token');
       console.log(token);
       if(token!== null) {
-        this.props.navigation.dispatch(resetActionMain);
-      }
-      this.setState({
+        this.setState({
           isLoading: false
         }); 
+        this.props.navigation.dispatch(resetActionMain);
+      }
     }
     catch (error) {
       alert(error);
@@ -117,7 +117,7 @@ export default class LoginScreen extends React.Component {
 
       this.openProgress();
 
-      fetch('http://192.168.0.105:8082/stores/authenticate', {
+      fetch('http://159.89.168.254:8082/stores/authenticate', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
