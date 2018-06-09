@@ -52,13 +52,13 @@ export default class HomeScreen extends React.Component {
     let id = await AsyncStorage.getItem('store_id');
     console.log(id);
     
-    fetch(`http://159.89.168.254:8082/stores/orders/${id}`,{
+    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token,
-          'Host': '159.89.168.254:8082'
+          'Host': '192.168.0.105:8082'
         }
       })
       .then((response) => response.json())
@@ -128,7 +128,7 @@ export default class HomeScreen extends React.Component {
                 light 
                 block
                 style={styles.refreshButtonStyle}>
-                <View style={{ flex:2,flexDirection: 'row' ,alignItems: 'center', justifyContent:'center',paddingLeft:12}}>
+                <View style={{ flex:3,flexDirection: 'row' ,alignItems: 'center', justifyContent:'center', paddingRight:8}}>
                   <Picker
                     style={ styles.pickerStyle }
                     iosHeader="Select one"
@@ -198,7 +198,7 @@ export default class HomeScreen extends React.Component {
                 <View style={styles.view}>
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
                       <Text>#{order.order_id}</Text>
-                      <Text>₹{order.total}</Text>
+                      <Text>₹{order.cart.totalPrice}</Text>
                     </View>
 
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     color: '#2980b9'
   },
    pickerStyle: {
-    width:160, 
+    width:80, 
     height:20, 
     justifyContent:'flex-end', 
     alignItems:'center', 

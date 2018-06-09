@@ -31,11 +31,15 @@ import {
   Card,
   CardItem,
   Label } from 'native-base';
+import {
+  Notifications,
+} from 'expo'
 
 import { Button, Icon,  } from 'react-native-elements';
 import Modal from 'react-native-modalbox';
 
 var screen = Dimensions.get('window');
+import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
 
 export default class OrdersScreen extends React.Component {
   static navigationOptions = {
@@ -45,9 +49,26 @@ export default class OrdersScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      selected1: "key0"
+      selected1: "key0",
+      notification: {}
     };
-  } 
+  }
+  
+  componentDidMount() {
+    registerForPushNotificationsAsync();
+
+    // Handle notifications that are received or selected while the app
+    // is open. If the app was closed and then opened by tapping the
+    // notification (rather than just tapping the app icon to open it),
+    // this function will fire on the next tick after the app starts
+    // with the notification data.
+    this._notificationSubscription = Notifications.addListener(this._handleNotification);
+  }
+
+  _handleNotification = (notification) => {
+    this.setState({notification: notification});
+  }
+ 
 
   onValueChange(value: string) {
     this.setState({
@@ -58,7 +79,6 @@ export default class OrdersScreen extends React.Component {
   render() {
     return (
       <Container>
-
         <Modal style={ styles.modal } position={"top"} ref={"request"} backButtonClose={true} coverScreen={true} animationDuration={300} backdropPressToClose={false} swipeToClose={false}>
           <Header style={{  backgroundColor:'#fff' }}>
             <View style={ styles.headerViewStyle }>
@@ -207,30 +227,31 @@ export default class OrdersScreen extends React.Component {
             </View>
           </View>
         </Header>
-        <View style={styles.container}>
-        {/*<Text>Origin: {this.state.notification.origin}</Text>
-        <Text>Data: {JSON.stringify(this.state.notification.data.data.status)}</Text>*/}
-        <ScrollView
-            contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-          <View style={styles.view1}>
-            <List>
-              <ListItem onPress={() => this.refs.request.open()}>
-                <View style={styles.view1}>
-                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                    <Text>#11007</Text>
-                    <Text>₹ 600</Text>
-                  </View>
+        {/*<View style={styles.container}>
+          <ScrollView
+              contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+            <View style={styles.view1}>
+              <List>
+                <ListItem onPress={() => this.refs.request.open()}>
+                  <View style={styles.view1}>
+                    <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                      <Text>#11007</Text>
+                      <Text>₹ 600</Text>
+                    </View>
 
-                  <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                    <Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>Request</Text>                      
-                    <Text note>12:07 pm</Text>    
+                    <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
+                      <Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>Request</Text>                      
+                      <Text note>12:07 pm</Text>    
+                    </View>
                   </View>
-                </View>
-              </ListItem>
-            </List>
-          </View>
-
-        </ScrollView>
+                </ListItem>
+              </List>
+            </View>
+          </ScrollView>
+        </View>*/}
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Origin: {this.state.notification.origin}</Text>
+          <Text>Data: {JSON.stringify(this.state.notification.data)}</Text>
         </View>
       </Container>
     );

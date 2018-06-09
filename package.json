@@ -18,6 +18,7 @@
     "react-native-icons": "^0.7.1",
     "react-native-image-placeholder": "^1.0.14",
     "react-native-modal": "^4.1.1",
+    "react-native-modalbox": "^1.5.0",
     "react-native-simple-dialogs": "^0.3.1",
     "react-native-svg": "^6.0.0",
     "react-navigation": "^1.5.8",

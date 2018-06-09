@@ -38,30 +38,33 @@ export default class LoginScreen extends React.Component {
     super(props);
     this.imageHeight = new Animated.Value(120);
     this.state = {
-        isLoading: true,
-        store_id: '',
-        password: '',
-        auth:{}
+      isLoading: true,
+      store_id: '',
+      password: '',
+      auth:{}
     }
   }
 
   componentDidMount = async () => {
-    
     const resetActionMain = NavigationActions.reset({
       index: 0,
       actions: [
         NavigationActions.navigate({ routeName: 'Main' })
       ]
     });
-
     try {
       let token = await AsyncStorage.getItem('token');
       console.log(token);
-      if(token!== null) {
-        this.setState({
-          isLoading: false
-        }); 
+      if(token!== null) { 
         this.props.navigation.dispatch(resetActionMain);
+        /*this.setState({
+          isLoading: false
+        });*/
+      }
+      else{
+        this.setState({
+            isLoading: false
+          });
       }
     }
     catch (error) {
@@ -115,9 +118,10 @@ export default class LoginScreen extends React.Component {
 
       //console.log("Login");
 
-      this.openProgress();
+      //this.openProgress();
+      this.setState({ showProgress: true })
 
-      fetch('http://159.89.168.254:8082/stores/authenticate', {
+      fetch('http://192.168.0.105:8082/stores/authenticate', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -133,7 +137,7 @@ export default class LoginScreen extends React.Component {
         this.setState({
           auth: responseJson
         }, function() {
-          //console.log("auth"+this.state.auth);
+          console.log("auth"+this.state.auth);
           //console.log(this.state.store_id);
           //console.log(this.state.password);
           //console.log(this.state.auth.store.store_id);
@@ -142,6 +146,7 @@ export default class LoginScreen extends React.Component {
             //alert("success");
             AsyncStorage.setItem("token",this.state.auth.token);
             AsyncStorage.setItem("store_id",this.state.auth.store.store_id);
+            this.setState({ showProgress: false })
             this.props.navigation.dispatch(resetActionMain);
           }
           else{
@@ -150,7 +155,7 @@ export default class LoginScreen extends React.Component {
 
           }
         });
-      });
+      }).catch(e => console.log(e));;
   }
 
   /*focusPasswordInput() {
