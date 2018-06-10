@@ -11,7 +11,8 @@ import {
   AsyncStorage,
   Animated, 
   Keyboard, 
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  TouchableHighlight
 } from 'react-native';
 import { 
   Container, 
@@ -50,7 +51,8 @@ export default class OrdersScreen extends React.Component {
     super(props);
     this.state = {
       selected1: "key0",
-      notification: {}
+      notification: {},
+      products: {}
     };
   }
   
@@ -66,7 +68,11 @@ export default class OrdersScreen extends React.Component {
   }
 
   _handleNotification = (notification) => {
-    this.setState({notification: notification});
+    this.setState({
+      notification: notification,
+      products: notification.data
+    })
+    console.log(this.state.products)
   }
  
 
@@ -105,7 +111,7 @@ export default class OrdersScreen extends React.Component {
               <View>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items requiring prescriptions (1)</Text>
               <List
-                dataArray={this.state.notification.data}
+                dataArray={this.state.products.data}
                 renderRow={(product) =>
                 (<ListItem>
                     <View style={styles.view}>
@@ -159,7 +165,7 @@ export default class OrdersScreen extends React.Component {
             </View>
             <View style={{paddingTop:10}}>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items not requiring prescriptions (1)</Text>
-              <List>
+              {/*<List>
                 <ListItem>
                 
                   <View style={styles.view}>
@@ -186,7 +192,7 @@ export default class OrdersScreen extends React.Component {
                 
                 </ListItem>
 
-              </List>
+              </List>*/}
             </View>
             <View style={styles.pricing}>
               <View style={{marginLeft:10,marginRight:10,justifyContent : 'space-between'}}>
