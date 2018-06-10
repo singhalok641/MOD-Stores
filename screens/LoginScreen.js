@@ -99,15 +99,6 @@ export default class LoginScreen extends React.Component {
     }).start();
   };*/
 
-  openProgress() {
-        this.setState({ showProgress: true })
-
-        setTimeout(
-            () => this.setState({ showProgress: false }),
-            2500
-        );
-    }
-
   onLoginPress = async () => {
     const resetActionMain = NavigationActions.reset({
       index: 0,
@@ -115,10 +106,6 @@ export default class LoginScreen extends React.Component {
         NavigationActions.navigate({ routeName: 'Main' }),
       ]
     });
-
-      //console.log("Login");
-
-      //this.openProgress();
       this.setState({ showProgress: true })
 
       fetch('http://192.168.0.105:8082/stores/authenticate', {

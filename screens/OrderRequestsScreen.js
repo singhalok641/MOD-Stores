@@ -104,34 +104,58 @@ export default class OrdersScreen extends React.Component {
               contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
               <View>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items requiring prescriptions (1)</Text>
-              <List>
-                <ListItem>
-                
-                  <View style={styles.view}>
-                    
-                    <View style={ styles.info }>
-                      <View style={{ justifyContent:'flex-start',paddingTop: 0 }}>
-                        <Text style={styles.pro_name}>Whisper Ultra Nights Wings Sanitary Pads Pack of 2</Text>
-                      </View>
-                      <Text note style={styles.descrip}>packet of 5 pads</Text>
-                    </View>
-                    <View style={{justifyContent : 'flex-end'}}>
-                      <Text style={{flex:1, fontSize : 15, paddingTop: 0,color:'#4d4d4d',alignSelf : 'flex-end'}}>₹ 300</Text>
-                      <View style={{flexDirection : 'row',alignItems : 'center'}}>
-                        <View style={styles.button}>
-                          <Text style={{fontSize : 17,fontWeight : 'bold'}}> - </Text>  
+              <List
+                dataArray={this.state.notification.data}
+                renderRow={(product) =>
+                (<ListItem>
+                    <View style={styles.view}>
+                      <Image resizeMode = 'contain' style={styles.image} source={{ uri: product.item.imagePath }} />
+                      <View style={ styles.info }>
+                        <View style={{ justifyContent: 'flex-start', paddingTop: 3 }}>
+                          <Text style={styles.pro_name}>{product.item.name}</Text>
                         </View>
-                        <Text style={{fontSize : 15,fontWeight : 'bold',color : '#4d4d4d'}}>  1  </Text>
-                        <View style={styles.buttons}>
-                          <Text style={{fontSize : 17,color : '#03a9f4',fontWeight : 'bold'}}> + </Text>
+                        <Text note style={styles.descrip}>{product.item.brand}</Text>
+                        <View style={{
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          flexDirection: 'row',
+                          paddingLeft: 5,
+                          paddingTop: 5
+                        }}>
+                          <Text style={{
+                            flex: 1,
+                            fontSize: 16,
+                            color: '#4d4d4d',
+                            alignSelf: 'flex-end',
+                            paddingBottom: 2 }}>₹ {product.price}</Text>
+                          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <TouchableHighlight
+                              onPress={() => this.decreaseByOne(product.item._id)}
+                              underlayColor='#dbdbdb'>
+                              <View style={styles.button}>
+                                <Text style={{ fontSize: 17, fontWeight: 'bold' }}> - </Text>
+                              </View>
+                            </TouchableHighlight>
+                            <Text style={{
+                              fontSize: 16,
+                              fontWeight: 'bold',
+                              color: '#4d4d4d' }}> {product.qty} </Text>
+                            <TouchableHighlight
+                              onPress={() => this.increaseByOne(product.item._id)}
+                              underlayColor='#dbdbdb'>
+                              <View style={styles.buttons}>
+                                <Text style={{
+                                  fontSize: 17,
+                                  color: '#03a9f4',
+                                  fontWeight: 'bold' }}> + </Text>
+                              </View>
+                            </TouchableHighlight>
+                          </View>
                         </View>
                       </View>
                     </View>
-                  </View>
-                
-                </ListItem>
-
-              </List>
+                  </ListItem>)
+              } />
             </View>
             <View style={{paddingTop:10}}>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items not requiring prescriptions (1)</Text>
@@ -227,7 +251,7 @@ export default class OrdersScreen extends React.Component {
             </View>
           </View>
         </Header>
-        {/*<View style={styles.container}>
+        <View style={styles.container}>
           <ScrollView
               contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
             <View style={styles.view1}>
@@ -238,7 +262,6 @@ export default class OrdersScreen extends React.Component {
                       <Text>#11007</Text>
                       <Text>₹ 600</Text>
                     </View>
-
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
                       <Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>Request</Text>                      
                       <Text note>12:07 pm</Text>    
@@ -248,11 +271,11 @@ export default class OrdersScreen extends React.Component {
               </List>
             </View>
           </ScrollView>
-        </View>*/}
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        </View>
+        {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Origin: {this.state.notification.origin}</Text>
           <Text>Data: {JSON.stringify(this.state.notification.data)}</Text>
-        </View>
+        </View>*/}
       </Container>
     );
   }
