@@ -52,7 +52,7 @@ export default class HomeScreen extends React.Component {
     let id = await AsyncStorage.getItem('store_id');
     console.log(id);
     
-    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
+    /*fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -74,7 +74,7 @@ export default class HomeScreen extends React.Component {
       })
       .catch((error) => {
         console.error(error);
-      });
+      });*/
   }
 
   onValueChange(value: string) {
@@ -121,7 +121,7 @@ export default class HomeScreen extends React.Component {
           </View>
         </Header>
 
-        <View style={styles.container}>
+        {/*<View style={styles.container}>
           <View style={{flexDirection:'row',justifyContent: 'space-between',alignItems: 'center' ,paddingBottom:20}}>
             <Left>
               <Button 
@@ -216,7 +216,7 @@ export default class HomeScreen extends React.Component {
             </List>
             </Display>
             </ScrollView>
-        </View>
+        </View>*/}
       </Container>
     );
   }
@@ -229,8 +229,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 15,
     paddingTop:15,
-
-  },
+},
   headerViewStyle:{
     flex:1, 
     flexDirection: 'row',

@@ -1,13 +1,70 @@
 import React from 'react';
 import { Platform } from 'react-native';
+import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+
+import TabBarIcon from '../components/TabBarIcon';
 import {SimpleLineIcons} from '@expo/vector-icons';
-import { TabNavigator, TabBarBottom } from 'react-navigation';
 import Colors from '../constants/Colors';
 import HomeScreen from '../screens/HomeScreen';
 import OrderRequestsScreen from '../screens/OrderRequestsScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
-export default TabNavigator(
+const HomeStack = createStackNavigator({
+  Home: HomeScreen,
+});
+
+HomeStack.navigationOptions = {
+  tabBarLabel: 'Home',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={
+        Platform.OS === 'ios'
+          ? `bag${focused ? '' : '-outline'}`
+          : 'bag'
+      }
+    />
+  ),
+};
+
+const RequestsStack = createStackNavigator({
+  Requests: OrderRequestsScreen,
+});
+
+RequestsStack.navigationOptions = {
+  tabBarLabel: 'Order Requests',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `list${focused ? '' : '-outline'}` : 'list'}
+    />
+  ),
+};
+
+const ProfileStack = createStackNavigator({
+  Account: ProfileScreen,
+});
+
+ProfileStack.navigationOptions = {
+  tabBarLabel: 'Account',
+  tabBarIcon: ({ focused }) => (
+    <TabBarIcon
+      focused={focused}
+      name={Platform.OS === 'ios' ? `user${focused ? '' : '-outline'}` : 'user'}
+    />
+  ),
+};
+
+export default createBottomTabNavigator({
+  HomeStack,
+  RequestsStack,
+  ProfileStack
+});
+
+
+
+/*export default TabNavigator(
+
   {
     Orders: {
       screen: HomeScreen,
@@ -49,4 +106,5 @@ export default TabNavigator(
     animationEnabled: false,
     swipeEnabled: false,
   }
-);
+
+);*/

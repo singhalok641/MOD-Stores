@@ -23,8 +23,9 @@ import { StyleSheet,
   KeyboardAvoidingView,
   Animated, } from 'react-native';
 import { Button } from 'react-native-elements';
-import { NavigationActions } from 'react-navigation';
-import { ProgressDialog } from 'react-native-simple-dialogs';
+import { StackActions, NavigationActions } from 'react-navigation'
+import { ProgressDialog } from 'react-native-simple-dialogs'
+import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync'
 
 const IMAGE_HEIGHT_SMALL = 60;
 
@@ -46,10 +47,11 @@ export default class LoginScreen extends React.Component {
   }
 
   componentDidMount = async () => {
-    const resetActionMain = NavigationActions.reset({
+    registerForPushNotificationsAsync()
+    const resetActionMain = StackActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: 'Main' })
+        NavigationActions.navigate({ routeName: 'Home' })
       ]
     });
     try {
@@ -100,10 +102,10 @@ export default class LoginScreen extends React.Component {
   };*/
 
   onLoginPress = async () => {
-    const resetActionMain = NavigationActions.reset({
+    const resetActionMain = StackActions.reset({
       index: 0,
       actions: [
-        NavigationActions.navigate({ routeName: 'Main' }),
+        NavigationActions.navigate({ routeName: 'Home' }),
       ]
     });
       this.setState({ showProgress: true })

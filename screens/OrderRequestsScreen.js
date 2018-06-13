@@ -39,7 +39,7 @@ import { Button, Icon,  } from 'react-native-elements';
 import Modal from 'react-native-modalbox';
 
 var screen = Dimensions.get('window');
-import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync';
+//import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync'
 
 export default class OrdersScreen extends React.Component {
   static navigationOptions = {
@@ -51,12 +51,15 @@ export default class OrdersScreen extends React.Component {
     this.state = {
       selected1: "key0",
       notification: {},
-      products: {}
+      orderRequests: {}
     };
   }
   
-  componentDidMount() {
-    registerForPushNotificationsAsync();
+  componentDidMount = async () => {
+    let token = await AsyncStorage.getItem('token');
+    let id = await AsyncStorage.getItem('store_id');
+    console.log(id);
+    //registerForPushNotificationsAsync();
 
     // Handle notifications that are received or selected while the app
     // is open. If the app was closed and then opened by tapping the
@@ -64,6 +67,27 @@ export default class OrdersScreen extends React.Component {
     // this function will fire on the next tick after the app starts
     // with the notification data.
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
+    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+          'Host': '192.168.0.105:8082'
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          orderRequests:responseJson.orderRequests,
+          isLoading:false,
+        }, function() {
+          console.log(this.state.orderRequests)
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+    });
   }
 
   _handleNotification = (notification) => {
@@ -109,7 +133,7 @@ export default class OrdersScreen extends React.Component {
               contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
               <View>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items requiring prescriptions (1)</Text>
-              <List
+              {/*<List
                 dataArray={this.state.products.data}
                 renderRow={(product) =>
                 (<ListItem>
@@ -160,7 +184,7 @@ export default class OrdersScreen extends React.Component {
                       </View>
                     </View>
                   </ListItem>)
-              } />
+              } />*/}
             </View>
             {/*<View style={{paddingTop:10}}>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items not requiring prescriptions (1)</Text>
@@ -258,23 +282,25 @@ export default class OrdersScreen extends React.Component {
         </Header>
         <View style={styles.container}>
           <ScrollView
-              contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-            <View style={styles.view1}>
-              <List>
-                <ListItem onPress={() => this.refs.request.open()}>
-                  <View style={styles.view1}>
+              contentContainerStyle={styles.contentContainer} 
+              showsVerticalScrollIndicator={false} >
+              <List dataArray={this.state.orderRequests}
+              renderRow={(order) =>
+              <ListItem>
+                <View style={styles.listView}>
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                      <Text>#11007</Text>
-                      <Text>₹ 600</Text>
+                      <Text>#{order.order_id}</Text>
+                      <Text>₹{order.cart.totalPrice}</Text>
                     </View>
+
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
-                      <Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>Request</Text>                      
-                      <Text note>12:07 pm</Text>    
+                      <Text style={{ color: '#2f95dc',textAlign: 'center', fontSize:15, fontWeight:'bold' }}>{order.orderStatus}</Text>
+                      <Text note>{order.created_at}</Text>    
                     </View>
                   </View>
                 </ListItem>
-              </List>
-            </View>
+              }>
+            </List>
           </ScrollView>
         </View>
         {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -303,6 +329,12 @@ const styles = StyleSheet.create({
     alignItems : 'center',
     justifyContent : 'center',
     alignContent : 'center'
+  },
+  listView: {
+    flex:1,
+    flexDirection:'column',
+    justifyContent: 'space-between',
+    alignItems: 'stretch' 
   },
   buttons:{
     height:21,
