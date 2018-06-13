@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   Image,
-  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -163,9 +162,9 @@ export default class OrdersScreen extends React.Component {
                   </ListItem>)
               } />
             </View>
-            <View style={{paddingTop:10}}>
+            {/*<View style={{paddingTop:10}}>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items not requiring prescriptions (1)</Text>
-              {/*<List>
+              <List>
                 <ListItem>
                 
                   <View style={styles.view}>
@@ -192,8 +191,8 @@ export default class OrdersScreen extends React.Component {
                 
                 </ListItem>
 
-              </List>*/}
-            </View>
+              </List>
+            </View>*/}
             <View style={styles.pricing}>
               <View style={{marginLeft:10,marginRight:10,justifyContent : 'space-between'}}>
                 <View style={{flexDirection : 'row',justifyContent : 'space-between',alignItems : 'center'}}>
