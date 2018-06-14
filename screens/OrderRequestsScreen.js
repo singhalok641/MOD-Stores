@@ -30,13 +30,15 @@ import {
   Item as FormItem,
   Card,
   CardItem,
-  Label } from 'native-base';
+  Label
+} from 'native-base';
 import {
   Notifications,
 } from 'expo'
 
-import { Button, Icon,  } from 'react-native-elements';
-import Modal from 'react-native-modalbox';
+import { Button, Icon,  } from 'react-native-elements'
+import Modal from 'react-native-modalbox'
+import { ProgressDialog } from 'react-native-simple-dialogs'
 
 var screen = Dimensions.get('window');
 //import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync'
@@ -51,14 +53,18 @@ export default class OrdersScreen extends React.Component {
     this.state = {
       selected1: "key0",
       notification: {},
-      orderRequests: {}
+      orderRequests: {},
+      cart: {}
     };
   }
   
   componentDidMount = async () => {
-    let token = await AsyncStorage.getItem('token');
-    let id = await AsyncStorage.getItem('store_id');
+    let token = await AsyncStorage.getItem('token')
+    let id = await AsyncStorage.getItem('store_id')
     console.log(id);
+    this.setState({
+      showProgress: true
+    })
     //registerForPushNotificationsAsync();
 
     // Handle notifications that are received or selected while the app
@@ -81,8 +87,41 @@ export default class OrdersScreen extends React.Component {
         this.setState({
           orderRequests:responseJson.orderRequests,
           isLoading:false,
+          showProgress: false
         }, function() {
-          console.log(this.state.orderRequests)
+          //console.log(this.state.orderRequests)
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+    });
+  }
+
+  fetchOrderRequests = async () => {
+    let token = await AsyncStorage.getItem('token')
+    let id = await AsyncStorage.getItem('store_id')
+    console.log(id);
+    this.setState({
+      showProgress: true
+    })
+
+    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token,
+          'Host': '192.168.0.105:8082'
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          orderRequests:responseJson.orderRequests,
+          isLoading:false,
+          showProgress: false
+        }, function() {
+          //console.log(this.state.orderRequests)
         });
       })
       .catch((error) => {
@@ -91,18 +130,84 @@ export default class OrdersScreen extends React.Component {
   }
 
   _handleNotification = (notification) => {
+    this.fetchOrderRequests()
     this.setState({
       notification: notification,
-      products: notification.data
     })
-    console.log(this.state.products)
+    console.log("hey")
   }
- 
+
+  decreaseByOne(productId) {
+    this.setState({
+      showProgress: true
+    })
+    fetch(`http://192.168.0.105:8082/stores/users/reduceByOne/${productId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Host': '192.168.56.1:8082'
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          showProgress: false
+        }, function () {
+          console.log(responseJson)
+          if (responseJson.success === true) {
+            console.log('decreased quantity by one')
+            this.componentDidMount()
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  increaseByOne(productId) {
+    this.setState({
+      showProgress: true
+    })
+    fetch(`http://192.168.0.105:8082/stores/users/increaseByOne/${productId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Host': '192.168.56.1:8082'
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          showProgress: false
+        }, function () {
+          console.log(responseJson)
+          if (responseJson.success === true) {
+            console.log('increased quantity by one')
+            this.componentDidMount()
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
   onValueChange(value: string) {
     this.setState({
       selected1: value
-    });
+    })
+  }
+
+  showOrderDetails(cart) {
+    this.setState({
+      cart: cart
+    })
+    this.refs.request.open()
   }
 
   render() {
@@ -121,8 +226,8 @@ export default class OrdersScreen extends React.Component {
                   onPress={() => this.refs.request.close()}
                 /> 
                 <View style={styles.HeaderShapeView}>
-                  <Text style={{fontSize : 15,color:'#555555',fontWeight : 'bold'}}>ORDER #11007</Text>
-                  <Text style={{fontSize : 14,color:'#90a4ae'}}>Request | 2 items, ₹600</Text>
+                  <Text style={{fontSize : 15,color:'#555555',fontWeight : 'bold'}}>ORDER #{this.state.orderRequests.order_id}</Text>
+                  <Text style={{fontSize : 14,color:'#90a4ae'}}>Request | {this.state.cart.totalQty} items, ₹{this.state.cart.totalPrice}</Text>
                 </View>         
               </View>
             </View>
@@ -133,8 +238,8 @@ export default class OrdersScreen extends React.Component {
               contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
               <View>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items requiring prescriptions (1)</Text>
-              {/*<List
-                dataArray={this.state.products.data}
+              <List
+                dataArray={this.state.cart.items}
                 renderRow={(product) =>
                 (<ListItem>
                     <View style={styles.view}>
@@ -184,7 +289,7 @@ export default class OrdersScreen extends React.Component {
                       </View>
                     </View>
                   </ListItem>)
-              } />*/}
+              } />
             </View>
             {/*<View style={{paddingTop:10}}>
               <Text style={{fontSize:13,color :'#03a9f4'}}>Items not requiring prescriptions (1)</Text>
@@ -221,11 +326,11 @@ export default class OrdersScreen extends React.Component {
               <View style={{marginLeft:10,marginRight:10,justifyContent : 'space-between'}}>
                 <View style={{flexDirection : 'row',justifyContent : 'space-between',alignItems : 'center'}}>
                   <Text style={styles.price_text}>Total Items selected</Text>
-                  <Text style={styles.price_text}>2</Text>
+                  <Text style={styles.price_text}>{this.state.cart.totalQty}</Text>
                 </View>
                 <View style={{flexDirection : 'row',justifyContent : 'space-between',alignItems : 'center'}}>
                   <Text style={styles.price_text}>Item Total</Text>
-                  <Text style={styles.price_text}>₹ 600</Text>
+                  <Text style={styles.price_text}>₹ {this.state.cart.totalPrice}</Text>
                 </View>
                 <View style={{flexDirection : 'row',justifyContent : 'space-between',alignItems : 'center'}}>
                   <Text style={styles.price_text}>Discount Applied</Text>
@@ -242,7 +347,7 @@ export default class OrdersScreen extends React.Component {
               <View style={{marginLeft:10,marginRight:10}}>
                 <View style={{flexDirection : 'row',justifyContent : 'space-between',alignItems : 'center'}}>
                   <Text style={styles.price_text}></Text>
-                  <Text style={styles.total}>To Pay: ₹ 600</Text>
+                  <Text style={styles.total}>To Pay: ₹ {this.state.cart.totalPrice}</Text>
                 </View>
               </View>
             </View> 
@@ -286,7 +391,7 @@ export default class OrdersScreen extends React.Component {
               showsVerticalScrollIndicator={false} >
               <List dataArray={this.state.orderRequests}
               renderRow={(order) =>
-              <ListItem>
+              <ListItem onPress={() => this.showOrderDetails(order.cart)}>
                 <View style={styles.listView}>
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
                       <Text>#{order.order_id}</Text>
@@ -302,6 +407,12 @@ export default class OrdersScreen extends React.Component {
               }>
             </List>
           </ScrollView>
+          <ProgressDialog
+            visible={this.state.showProgress}
+            message='Loading order requests...'
+            activityIndicatorSize='large'
+            activityIndicatorColor='#0A9EFC'
+          />
         </View>
         {/*<View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <Text>Origin: {this.state.notification.origin}</Text>
