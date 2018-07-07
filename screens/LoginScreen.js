@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import { Container, 
   Header, 
   Content, 
@@ -9,7 +9,7 @@ import { Container,
   Body, 
   Icon,  
   Item, 
-  Input,  } from 'native-base';
+  Input,  } from 'native-base'
 import { StyleSheet, 
   Image, 
   View, 
@@ -21,13 +21,13 @@ import { StyleSheet,
   ScrollView,
   Keyboard, 
   KeyboardAvoidingView,
-  Animated, } from 'react-native';
-import { Button } from 'react-native-elements';
+  Animated, } from 'react-native'
+import { Button } from 'react-native-elements'
 import { StackActions, NavigationActions } from 'react-navigation'
 import { ProgressDialog } from 'react-native-simple-dialogs'
 import registerForPushNotificationsAsync from '../api/registerForPushNotificationsAsync'
 
-const IMAGE_HEIGHT_SMALL = 60;
+const IMAGE_HEIGHT_SMALL = 60
 
 export default class LoginScreen extends React.Component {
 
@@ -110,7 +110,7 @@ export default class LoginScreen extends React.Component {
     });
       this.setState({ showProgress: true })
 
-      fetch('http://192.168.0.105:8082/stores/authenticate', {
+      fetch('http://192.168.0.103:8082/stores/authenticate', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',

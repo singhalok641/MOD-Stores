@@ -73,13 +73,13 @@ export default class OrdersScreen extends React.Component {
     // this function will fire on the next tick after the app starts
     // with the notification data.
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
-    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
+    fetch(`http://192.168.0.103:8082/stores/orders/${id}`,{
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token,
-          'Host': '192.168.0.105:8082'
+          'Host': '192.168.0.103:8082'
         }
       })
       .then((response) => response.json())
@@ -105,13 +105,13 @@ export default class OrdersScreen extends React.Component {
       showProgress: true
     })
 
-    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
+    fetch(`http://192.168.0.103:8082/stores/orders/${id}`,{
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token,
-          'Host': '192.168.0.105:8082'
+          'Host': '192.168.0.103:8082'
         }
       })
       .then((response) => response.json())
@@ -141,7 +141,7 @@ export default class OrdersScreen extends React.Component {
     this.setState({
       showProgress: true
     })
-    fetch(`http://192.168.0.105:8082/stores/users/reduceByOne/${productId}`,
+    fetch(`http://192.168.0.103:8082/stores/users/reduceByOne/${productId}`,
       {
         method: 'GET',
         headers: {
@@ -171,7 +171,7 @@ export default class OrdersScreen extends React.Component {
     this.setState({
       showProgress: true
     })
-    fetch(`http://192.168.0.105:8082/stores/users/increaseByOne/${productId}`,
+    fetch(`http://192.168.0.103:8082/stores/users/increaseByOne/${productId}`,
       {
         method: 'GET',
         headers: {
@@ -243,7 +243,7 @@ export default class OrdersScreen extends React.Component {
                 renderRow={(product) =>
                 (<ListItem>
                     <View style={styles.view}>
-                      <Image resizeMode = 'contain' style={styles.image} source={{ uri: product.item.imagePath }} />
+                      <Image resizeMode = 'contain' style={styles.image} source={{ uri: product.item.image_src }} />
                       <View style={ styles.info }>
                         <View style={{ justifyContent: 'flex-start', paddingTop: 3 }}>
                           <Text style={styles.pro_name}>{product.item.name}</Text>
