@@ -54,7 +54,9 @@ export default class OrdersScreen extends React.Component {
       selected1: "key0",
       notification: {},
       orderRequests: {},
-      cart: {}
+      cart: {},
+      order_id: null,
+      _id: null
     };
   }
   
@@ -73,13 +75,13 @@ export default class OrdersScreen extends React.Component {
     // this function will fire on the next tick after the app starts
     // with the notification data.
     this._notificationSubscription = Notifications.addListener(this._handleNotification);
-    fetch(`http://192.168.0.103:8082/stores/orders/${id}`,{
+    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token,
-          'Host': '192.168.0.103:8082'
+          'Host': '192.168.0.105:8082'
         }
       })
       .then((response) => response.json())
@@ -105,27 +107,27 @@ export default class OrdersScreen extends React.Component {
       showProgress: true
     })
 
-    fetch(`http://192.168.0.103:8082/stores/orders/${id}`,{
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token,
-          'Host': '192.168.0.103:8082'
-        }
-      })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          orderRequests:responseJson.orderRequests,
-          isLoading:false,
-          showProgress: false
-        }, function() {
-          //console.log(this.state.orderRequests)
-        });
-      })
-      .catch((error) => {
-        console.error(error);
+    fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token,
+        'Host': '192.168.0.105:8082'
+      }
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        orderRequests:responseJson.orderRequests,
+        isLoading:false,
+        showProgress: false
+      }, function() {
+        //console.log(this.state.orderRequests)
+      });
+    })
+    .catch((error) => {
+      console.error(error);
     });
   }
 
@@ -137,11 +139,19 @@ export default class OrdersScreen extends React.Component {
     console.log("hey")
   }
 
+  onClose = async () => {
+    this.setState({
+      showProgress: true
+    })
+    console.log('Modal just closed')
+    this.fetchOrderRequests()
+  }
+
   decreaseByOne(productId) {
     this.setState({
       showProgress: true
     })
-    fetch(`http://192.168.0.103:8082/stores/users/reduceByOne/${productId}`,
+    fetch(`http://192.168.0.105:8082/stores/orders/reduceByOne/${this.state._id}/${productId}`,
       {
         method: 'GET',
         headers: {
@@ -153,12 +163,14 @@ export default class OrdersScreen extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
-          showProgress: false
+          showProgress: false,
+          cart: responseJson.order.cart,
+          order_id: responseJson.order.order_id,
+          _id: responseJson.order._id
         }, function () {
           console.log(responseJson)
           if (responseJson.success === true) {
             console.log('decreased quantity by one')
-            this.componentDidMount()
           }
         })
       })
@@ -171,7 +183,7 @@ export default class OrdersScreen extends React.Component {
     this.setState({
       showProgress: true
     })
-    fetch(`http://192.168.0.103:8082/stores/users/increaseByOne/${productId}`,
+    fetch(`http://192.168.0.105:8082/stores/orders/increaseByOne/${this.state._id}/${productId}`,
       {
         method: 'GET',
         headers: {
@@ -183,12 +195,14 @@ export default class OrdersScreen extends React.Component {
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
-          showProgress: false
+          showProgress: false,
+          cart: responseJson.order.cart,
+          order_id: responseJson.order.order_id,
+          _id: responseJson.order._id
         }, function () {
           console.log(responseJson)
           if (responseJson.success === true) {
             console.log('increased quantity by one')
-            this.componentDidMount()
           }
         })
       })
@@ -203,9 +217,11 @@ export default class OrdersScreen extends React.Component {
     })
   }
 
-  showOrderDetails(cart) {
+  showOrderDetails(cart, order_id, _id) {
     this.setState({
-      cart: cart
+      cart: cart,
+      order_id: order_id,
+      _id: _id
     })
     this.refs.request.open()
   }
@@ -213,7 +229,16 @@ export default class OrdersScreen extends React.Component {
   render() {
     return (
       <Container>
-        <Modal style={ styles.modal } position={"top"} ref={"request"} backButtonClose={true} coverScreen={true} animationDuration={300} backdropPressToClose={false} swipeToClose={false}>
+        <Modal 
+          style={ styles.modal } 
+          position={"top"} ref={"request"} 
+          backButtonClose={true} 
+          coverScreen={true} 
+          animationDuration={300} 
+          backdropPressToClose={false} 
+          swipeToClose={false}
+          onClosed={this.onClose}
+          >
           <Header style={{  backgroundColor:'#fff' }}>
             <View style={ styles.headerViewStyle }>
               <View style={{  flexDirection: 'row', alignItems: 'center'  }}>
@@ -226,7 +251,7 @@ export default class OrdersScreen extends React.Component {
                   onPress={() => this.refs.request.close()}
                 /> 
                 <View style={styles.HeaderShapeView}>
-                  <Text style={{fontSize : 15,color:'#555555',fontWeight : 'bold'}}>ORDER #{this.state.orderRequests.order_id}</Text>
+                  <Text style={{fontSize : 15,color:'#555555',fontWeight : 'bold'}}>ORDER #{this.state.order_id}</Text>
                   <Text style={{fontSize : 14,color:'#90a4ae'}}>Request | {this.state.cart.totalQty} items, ₹{this.state.cart.totalPrice}</Text>
                 </View>         
               </View>
@@ -391,7 +416,7 @@ export default class OrdersScreen extends React.Component {
               showsVerticalScrollIndicator={false} >
               <List dataArray={this.state.orderRequests}
               renderRow={(order) =>
-              <ListItem onPress={() => this.showOrderDetails(order.cart)}>
+              <ListItem onPress={() => this.showOrderDetails(order.cart, order.order_id, order._id)}>
                 <View style={styles.listView}>
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
                       <Text>#{order.order_id}</Text>

@@ -45,13 +45,13 @@ export default class ProfileScreen extends React.Component {
 
   componentDidMount = async () => {
     let token = await AsyncStorage.getItem('token');
-    fetch(`http://192.168.0.103:8082/stores/profile`, {
+    fetch(`http://192.168.0.105:8082/stores/profile`, {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
         'Authorization': 'Bearer ' + token,
         'Content-Type': 'application/json',
-        'Host': 'http://192.168.0.103:8082'
+        'Host': 'http://192.168.0.105:8082'
       }
     })
     .then((response) => response.json())

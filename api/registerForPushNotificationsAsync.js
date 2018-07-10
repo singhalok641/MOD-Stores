@@ -1,7 +1,7 @@
 import { Constants, Permissions, Notifications } from 'expo';
 
 // Example server, implemented in Rails: https://git.io/vKHKv
-const PUSH_ENDPOINT = 'http://192.168.0.103:8082/stores/register-token-device';
+const PUSH_ENDPOINT = 'http://192.168.0.105:8082/stores/register-token-device';
 const secretCode = 'yoursecret';
 
 export default (async function registerForPushNotificationsAsync() {

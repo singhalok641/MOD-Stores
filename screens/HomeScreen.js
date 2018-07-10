@@ -52,13 +52,13 @@ export default class HomeScreen extends React.Component {
     let id = await AsyncStorage.getItem('store_id');
     console.log(id);
     
-    /*fetch(`http://192.168.0.103:8082/stores/orders/${id}`,{
+    /*fetch(`http://192.168.0.105:8082/stores/orders/${id}`,{
         method: 'GET',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token,
-          'Host': '192.168.0.103:8082'
+          'Host': '192.168.0.105:8082'
         }
       })
       .then((response) => response.json())
