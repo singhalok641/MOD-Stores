@@ -5,12 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
-  TextInput,
   Dimensions,
   AsyncStorage,
-  Animated, 
-  Keyboard, 
-  KeyboardAvoidingView,
   TouchableHighlight
 } from 'react-native';
 import { 
@@ -30,13 +26,14 @@ import {
   Item as FormItem,
   Card,
   CardItem,
-  Label
+  Label,
+  H3
 } from 'native-base';
 import {
   Notifications,
 } from 'expo'
 
-import { Button, Icon,  } from 'react-native-elements'
+import { Button, Icon } from 'react-native-elements'
 import Modal from 'react-native-modalbox'
 import { ProgressDialog } from 'react-native-simple-dialogs'
 
@@ -91,7 +88,7 @@ export default class OrdersScreen extends React.Component {
           isLoading:false,
           showProgress: false
         }, function() {
-          //console.log(this.state.orderRequests)
+          console.log(this.state.orderRequests)
         });
       })
       .catch((error) => {
@@ -123,7 +120,7 @@ export default class OrdersScreen extends React.Component {
         isLoading:false,
         showProgress: false
       }, function() {
-        //console.log(this.state.orderRequests)
+        console.log(this.state.orderRequests)
       });
     })
     .catch((error) => {
@@ -151,6 +148,9 @@ export default class OrdersScreen extends React.Component {
     this.setState({
       showProgress: true
     })
+    if (this.state.cart.totalQty <=1) {
+      this.refs.request.close()
+    }
     fetch(`http://192.168.0.105:8082/stores/orders/reduceByOne/${this.state._id}/${productId}`,
       {
         method: 'GET',
@@ -211,6 +211,66 @@ export default class OrdersScreen extends React.Component {
       })
   }
 
+  acceptOrder(orderId) {
+    this.setState({
+      showProgress: true
+    })
+    fetch(`http://192.168.0.105:8082/stores/orders/acceptOrder/${orderId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Host': '192.168.56.1:8082'
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          showProgress: false,
+        }, function () {
+          console.log(responseJson)
+          if (responseJson.success === true) {
+            console.log('status changed to waiting')
+            this.refs.request.close()
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
+  declineOrder(orderId) {
+    this.setState({
+      showProgress: true
+    })
+    fetch(`http://192.168.0.105:8082/stores/orders/declineOrder/${orderId}`,
+      {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          'Host': '192.168.56.1:8082'
+        }
+      })
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({
+          showProgress: false,
+        }, function () {
+          console.log(responseJson)
+          if (responseJson.success === true) {
+            console.log('status changed to declined')
+            this.refs.request.close()
+          }
+        })
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
+
   onValueChange(value: string) {
     this.setState({
       selected1: value
@@ -227,6 +287,25 @@ export default class OrdersScreen extends React.Component {
   }
 
   render() {
+    if (this.state.orderRequests.length <=0) {
+      return (
+        <Container>
+          <Header style={{  backgroundColor:'#fff' }}>
+            <View style={ styles.headerViewStyle }>
+              <View style={{ marginTop:0 ,marginLeft:0, marginRight:0 , flexDirection: 'row', alignItems: 'center'  }}>
+                <View style = {styles.HeaderShapeView}>
+                  <Text style = {{ paddingTop: 0 ,fontSize:20, color: '#555555', fontWeight: 'bold' }}>Order Requests</Text>
+                </View>
+              </View>
+            </View>
+          </Header>
+          <View style = {{ justifyContent: 'center', alignItems: 'center' }} >
+            <H3 style={{ paddingTop: 20 ,fontSize:25, color: '#555555', fontWeight: 'bold' }}>No Order Requests yet!</H3>
+          </View>
+        </Container> 
+      );
+    }
+
     return (
       <Container>
         <Modal 
@@ -251,8 +330,11 @@ export default class OrdersScreen extends React.Component {
                   onPress={() => this.refs.request.close()}
                 /> 
                 <View style={styles.HeaderShapeView}>
-                  <Text style={{fontSize : 15,color:'#555555',fontWeight : 'bold'}}>ORDER #{this.state.order_id}</Text>
-                  <Text style={{fontSize : 14,color:'#90a4ae'}}>Request | {this.state.cart.totalQty} items, ₹{this.state.cart.totalPrice}</Text>
+                  <Text style={{fontSize : 15, color:'#555555',fontWeight : 'bold'}}>ORDER #{this.state.order_id}</Text>
+                  <Text 
+                    style={{fontSize : 14, color:'#90a4ae'}}>
+                    Request | { this.state.cart.totalQty } items, ₹{ this.state.cart.totalPrice }
+                  </Text>
                 </View>         
               </View>
             </View>
@@ -262,7 +344,7 @@ export default class OrdersScreen extends React.Component {
               style={styles.container}
               contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
               <View>
-              <Text style={{fontSize:13,color :'#03a9f4'}}>Items requiring prescriptions (1)</Text>
+              {/*<Text style={{fontSize:13,color :'#03a9f4'}}>Items requiring prescriptions (1)</Text>*/}
               <List
                 dataArray={this.state.cart.items}
                 renderRow={(product) =>
@@ -379,25 +461,27 @@ export default class OrdersScreen extends React.Component {
             </ScrollView> 
           </View>
           <View style={{alignItems : 'flex-start' , flexDirection : 'row',justifyContent : 'space-around'}}>
-              <Button 
-                large
-                containerViewStyle={{ width: '50%' }}
-                buttonStyle={{ alignItems:'center', justifyContent:'center' }}
-                backgroundColor={'#03a9f4'} 
-                title={`ACCEPT`}
-                fontWeight={'bold'}
-                fontSize = {17}
-              />
-              <Button
-                large
-                containerViewStyle={{ width: '50%' }}
-                buttonStyle={{ alignItems:'center', justifyContent:'center' }}
-                backgroundColor={'#ffffff'} 
-                textStyle={{color: '#03a9f4'}}
-                title={`DECLINE`}
-                fontWeight={'bold'}
-                fontSize = {17}
-              />
+            <Button
+              large
+              onPress={() => this.declineOrder(this.state._id)}
+              containerViewStyle={{ width: '50%' }}
+              buttonStyle={{ alignItems:'center', justifyContent:'center' }}
+              backgroundColor={'#FF0000'} 
+              textStyle={{color: '#ffffff'}}
+              title={`DECLINE`}
+              fontWeight={'bold'}
+              fontSize = {17}
+            />
+            <Button 
+              large
+              onPress={() => this.acceptOrder(this.state._id)}
+              containerViewStyle={{ width: '50%' }}
+              buttonStyle={{ alignItems:'center', justifyContent:'center' }}
+              backgroundColor={'#03a9f4'} 
+              title={`ACCEPT`}
+              fontWeight={'bold'}
+              fontSize = {17}
+            />
           </View>
         </Modal>
 
@@ -415,9 +499,9 @@ export default class OrdersScreen extends React.Component {
               contentContainerStyle={styles.contentContainer} 
               showsVerticalScrollIndicator={false} >
               <List dataArray={this.state.orderRequests}
-              renderRow={(order) =>
-              <ListItem onPress={() => this.showOrderDetails(order.cart, order.order_id, order._id)}>
-                <View style={styles.listView}>
+                renderRow={(order) =>
+                <ListItem onPress={() => this.showOrderDetails(order.cart, order.order_id, order._id)}>
+                  <View style={styles.listView}>
                     <View style={{ flexDirection:'row',justifyContent: 'space-between',alignItems:'flex-start' }}>
                       <Text>#{order.order_id}</Text>
                       <Text>₹{order.cart.totalPrice}</Text>
@@ -447,6 +531,7 @@ export default class OrdersScreen extends React.Component {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
@@ -499,12 +584,6 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent : 'space-between'
   },
-  view1: {
-    flex:1,
-    flexDirection:'column',
-    justifyContent: 'space-between',
-    alignItems: 'stretch' 
-  },
   modal: {
     justifyContent: 'flex-start',
   },
@@ -538,7 +617,6 @@ const styles = StyleSheet.create({
     color:'#4d4d4d',
     fontWeight : 'bold',
     paddingTop:8,
-    marginBottom:13,
-
+    marginBottom:13
   },
 });
