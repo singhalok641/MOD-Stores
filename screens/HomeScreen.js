@@ -11,8 +11,7 @@ import {
 } from 'react-native'
 import { 
   Container, 
-  Header,
-  Item, 
+  Header, 
   Input, 
   Content, 
   List, 
@@ -28,14 +27,15 @@ import {
   Item as FormItem,
   Card,
   CardItem,
-  Label } from 'native-base'
+  Label,
+  Button } from 'native-base'
 import Display from 'react-native-display'
 import Modal from 'react-native-modalbox'
-import { Button, Icon  } from 'react-native-elements'
+import { Icon  } from 'react-native-elements'
 import { ProgressDialog } from 'react-native-simple-dialogs'
 import PickerInButton from '../components/PickerInButton'
 
-//const Item = Picker.Item;
+const Item = Picker.Item;
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -297,23 +297,33 @@ export default class HomeScreen extends React.Component {
           <View style={{ flexDirection: 'row',justifyContent: 'space-between',alignItems: 'center' ,paddingBottom: 20 }}>
             <Left>
               <Button 
-                raised
-                large
-                borderRadius={15}
-                buttonStyle={styles.refreshButtonStyle}
-                Component = {PickerInButton}
-              />
+                light 
+                block
+                style={styles.refreshButtonStyle}>
+                <View style={{ flex: 3, flexDirection: 'row', alignItems: 'center', justifyContent:'center', paddingRight:5 }}>
+                  <Picker
+                    style={ styles.pickerStyle }
+                    iosHeader="Select one"
+                    mode="dropdown"
+                    selectedValue={this.state.selected1}
+                    onValueChange={this.onValueChange.bind(this)}>
+                    <Item label="All Orders" value="key0" />
+                    <Item label="Active Orders" value="key1" />
+                    <Item label="Past Orders" value="key2" />
+                  </Picker>
+                </View>
+              </Button>
             </Left>
             <Right>
               <Button
-                raised
-                large
-                borderRadius={15}
-                buttonStyle={styles.refreshButtonStyle}
                 onPress={this.componentDidMount} 
-                leftIcon={{name: 'cached', type: 'materialicons'}} 
-                title='Refresh'
-              />
+                iconLeft 
+                block 
+                light 
+                style={styles.refreshButtonStyle}>
+                <Icon color='#555555' name='refresh' />
+                <Text color='#555555'> Refresh </Text>
+              </Button>
             </Right>
           </View>
           
@@ -519,7 +529,8 @@ const styles = StyleSheet.create({
   },
   refreshButtonStyle:{
     backgroundColor: 'rgba(0,0,0,0.05)',
-    width:140,
+    width:150,
+    borderRadius: 10
   },
   refreshIconStyle: {
     fontSize: 20,
